@@ -1,34 +1,34 @@
-import typescript from "@rollup/plugin-typescript";
-import commonjs from "@rollup/plugin-commonjs";
-import nodeResolve from "@rollup/plugin-node-resolve";
-import pkg from "./package.json" assert { type: "json" };
+import typescript from '@rollup/plugin-typescript';
+import commonjs from '@rollup/plugin-commonjs';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import pkg from './package.json' assert {type: 'json'};
 
 export default {
-  input: "src/index.ts",
+  input: 'src/index.ts',
   output: [
     {
       file: pkg.main,
-      format: "cjs",
+      format: 'cjs',
       sourcemap: true,
     },
     {
       file: pkg.module,
-      format: "esm",
+      format: 'esm',
       sourcemap: true,
     },
   ],
   external: [...Object.keys(pkg.peerDependencies || {}), ...Object.keys(pkg.dependencies || {})],
   plugins: [
-    nodeResolve({ extensions: [".js", ".jsx", ".ts", ".tsx"] }),
+    nodeResolve({extensions: ['.js', '.jsx', '.ts', '.tsx']}),
     commonjs(),
     typescript({
-      tsconfig: "./tsconfig.json",
+      tsconfig: './tsconfig.build.json',
       declaration: true,
-      declarationDir: "dist",
-      outDir: "dist",
+      declarationDir: 'dist',
+      outDir: 'dist',
       sourceMap: true,
-      rootDir: "src",
-      jsx: "react-jsx",
+      rootDir: 'src',
+      jsx: 'react-jsx',
     }),
   ],
 };

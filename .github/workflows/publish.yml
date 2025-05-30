@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - 'v([\d]*\.)+.*'
+      - 'v*.*.*'
 
 jobs:
   publish:

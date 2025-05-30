@@ -39,6 +39,6 @@ jobs:
         run: yarn build
 
       - name: Publish
-        run: yarn publish --no-git-checks
+        run: yarn npm publish
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

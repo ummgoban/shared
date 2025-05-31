@@ -1,12 +1,12 @@
-name: Publish Package
+name: Check
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  pull_request:
+    branches:
+      - '*'
 
 jobs:
-  publish:
+  check:
     runs-on: ubuntu-latest
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -84,10 +84,6 @@ jobs:
           else
             echo "all_pass=false" >> $GITHUB_ENV
           fi
-
-      - name: Publish
-        if: env.all_pass == 'true'
-        run: yarn npm publish --access=public
 
       - name: post-install
         run: sh .script/post-install.sh

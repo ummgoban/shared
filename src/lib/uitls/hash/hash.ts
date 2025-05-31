@@ -16,7 +16,10 @@ const crc32 = (str: string): number => {
   return (crc ^ 0xffffffff) >>> 0;
 };
 
-// 6자리 해시 생성 함수
+/**
+ * @description 6자리 해시 생성 함수
+ * @warning !충돌가능성이 있는 함수!
+ */
 export const to6DigitHash = (str: string): string => {
   const crc = crc32(str).toString(16);
   return crc.slice(0, 6).toUpperCase();

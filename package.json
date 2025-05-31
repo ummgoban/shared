@@ -1,6 +1,6 @@
 {
   "name": "@ummgoban/shared",
-  "version": "0.0.1-alpha.7",
+  "version": "0.0.1-alpha.8",
   "description": "ummgoban 공통 패키지",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -25,6 +25,7 @@
     "dist"
   ],
   "scripts": {
+    "ci": "./.script/ci.sh",
     "build": "rollup -c",
     "test": "vitest run",
     "dev": "vite",

@@ -1,6 +1,6 @@
 {
   "name": "@ummgoban/shared",
-  "version": "0.0.1-alpha.8",
+  "version": "0.0.1-alpha.9",
   "description": "ummgoban 공통 패키지",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -29,6 +29,7 @@
     "build": "rollup -c",
     "test": "vitest run",
     "dev": "vite",
+    "type-check": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx --fix",
     "lint:check": "eslint src --ext .ts,.tsx",
     "format": "prettier --write src",

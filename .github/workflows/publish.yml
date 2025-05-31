@@ -41,7 +41,45 @@ jobs:
           sh .script/pre-install.sh
           yarn install
 
+      - name: Lint
+        id: lint_check
+        continue-on-error: true
+        run: |
+          yarn lint:check
+          echo $? > lint_result
+
+      - name: Format
+        id: format_check
+        continue-on-error: true
+        run: |
+          yarn format:check
+          echo $? > format_result
+
+      - name: Type Check
+        id: type_check
+        continue-on-error: true
+        run: |
+          yarn type-check
+          echo $? > type_result
+
+      - name: Test
+        id: test_check
+        continue-on-error: true
+        run: |
+          yarn test
+          echo $? > test_result
+
+      - name: Check Lint & Format & Type Check & Test Results
+        id: check_results
+        run: |
+          if [ "$(cat lint_result)" -eq 0 ] && [ "$(cat format_result)" -eq 0 ] && [ "$(cat type_result)" -eq 0 ] && [ "$(cat test_result)" -eq 0 ]; then
+            echo "all_pass=true" >> $GITHUB_ENV
+          else
+            echo "all_pass=false" >> $GITHUB_ENV
+          fi
+
       - name: Build
+        if: env.all_pass == 'true'
         run: yarn build
 
       - name: Publish

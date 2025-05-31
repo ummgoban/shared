@@ -1,6 +1,6 @@
 {
   "name": "@ummgoban/shared",
-  "version": "0.0.1-alpha.9",
+  "version": "0.0.2",
   "description": "ummgoban 공통 패키지",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -16,6 +16,9 @@
     },
     "./utils": {
       "types": "./dist/lib/utils/index.d.ts"
+    },
+    "./http": {
+      "types": "./dist/lib/http/index.d.ts"
     },
     "./api-client": {
       "types": "./dist/lib/api-client/index.d.ts"
@@ -52,6 +55,7 @@
     "@rollup/plugin-commonjs": "^28.0.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-typescript": "^12.0.0",
+    "@types/axios": "^0.14.4",
     "@types/react": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^8.23.0",
     "@typescript-eslint/parser": "^8.23.0",
@@ -71,5 +75,8 @@
     "typescript": "^5.0.0",
     "vite": "^6.3.5",
     "vitest": "^3.1.4"
+  },
+  "dependencies": {
+    "axios": "^1.7.4"
   }
 }

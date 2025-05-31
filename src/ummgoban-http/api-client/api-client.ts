@@ -1,13 +1,14 @@
 import axios, {AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosRequestConfig, AxiosError} from 'axios';
 
-import {CustomError} from '@/lib/http';
-import {SessionType} from '@/lib/types';
+import {CustomError} from '../error';
+
+import {SessionType, StorageKeyType} from '@/lib/types';
 
 export interface ApiClientOptions {
   serverApiBaseUrl: string;
   sessionOptions: {
-    getStorage: <T extends object, K extends string>(key: K) => Promise<T | null>;
-    setStorage: <T extends object, K extends string>(key: K, value: T) => Promise<void>;
+    getStorage: <T extends object>(key: StorageKeyType) => Promise<T | null>;
+    setStorage: <T extends object>(key: StorageKeyType, value: T) => Promise<void>;
     refreshAccessToken: (refreshToken: string) => Promise<SessionType | null>;
   };
 }

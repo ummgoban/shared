@@ -751,6 +751,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rollup/plugin-alias@npm:^5.1.1":
+  version: 5.1.1
+  resolution: "@rollup/plugin-alias@npm:5.1.1"
+  peerDependencies:
+    rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+  peerDependenciesMeta:
+    rollup:
+      optional: true
+  checksum: 742ccb82170542a8229444bc3961f4c9b0a9eff890662e77ad201a7e04a91d67fa6f68d85c997032aa1845f8b991cf1f9a3329c77b4b067be80dad3c25abfb6b
+  languageName: node
+  linkType: hard
+
 "@rollup/plugin-commonjs@npm:^28.0.0":
   version: 28.0.3
   resolution: "@rollup/plugin-commonjs@npm:28.0.3"
@@ -1213,6 +1225,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ummgoban/shared@workspace:."
   dependencies:
+    "@rollup/plugin-alias": ^5.1.1
     "@rollup/plugin-commonjs": ^28.0.0
     "@rollup/plugin-node-resolve": ^16.0.0
     "@rollup/plugin-typescript": ^12.0.0

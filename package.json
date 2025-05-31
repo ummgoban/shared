@@ -18,10 +18,13 @@
       "types": "./dist/lib/utils/index.d.ts"
     },
     "./http": {
-      "types": "./dist/lib/http/index.d.ts"
+      "types": "./dist/ummgoban-http/index.d.ts"
+    },
+    "./error": {
+      "types": "./dist/ummgoban-http/error/index.d.ts"
     },
     "./api-client": {
-      "types": "./dist/lib/api-client/index.d.ts"
+      "types": "./dist/ummgoban-http/api-client/index.d.ts"
     }
   },
   "files": [
@@ -29,7 +32,7 @@
   ],
   "scripts": {
     "ci": "./.script/ci.sh",
-    "build": "rollup -c",
+    "build": "rm -rf dist && rollup -c",
     "test": "vitest run",
     "dev": "vite",
     "type-check": "tsc --noEmit",
@@ -52,6 +55,7 @@
     "react": ">=18.0.0"
   },
   "devDependencies": {
+    "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-commonjs": "^28.0.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-typescript": "^12.0.0",

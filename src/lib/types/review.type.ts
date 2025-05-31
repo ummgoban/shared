@@ -33,5 +33,5 @@ export type CustomerReviewInfo = {
   imageUrls: string[];
   reviewReplies: ReviewReplyType[];
   marketId: number;
-  marketName: number;
+  marketName: string;
 };

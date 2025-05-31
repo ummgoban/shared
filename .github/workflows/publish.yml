@@ -69,20 +69,24 @@ jobs:
           yarn test
           echo $? > test_result
 
-      - name: Check Lint & Format & Type Check & Test Results
+      - name: Build
+        id: build
+        continue-on-error: true
+        run: |
+          yarn build
+          echo $? > build_result
+
+      - name: Check Lint & Format & Type Check & Test & Build Results
         id: check_results
         run: |
-          if [ "$(cat lint_result)" -eq 0 ] && [ "$(cat format_result)" -eq 0 ] && [ "$(cat type_result)" -eq 0 ] && [ "$(cat test_result)" -eq 0 ]; then
+          if [ "$(cat lint_result)" -eq 0 ] && [ "$(cat format_result)" -eq 0 ] && [ "$(cat type_result)" -eq 0 ] && [ "$(cat test_result)" -eq 0 ] && [ "$(cat build_result)" -eq 0 ]; then
             echo "all_pass=true" >> $GITHUB_ENV
           else
             echo "all_pass=false" >> $GITHUB_ENV
           fi
 
-      - name: Build
-        if: env.all_pass == 'true'
-        run: yarn build
-
       - name: Publish
+        if: env.all_pass == 'true'
         run: yarn npm publish --access=public
 
       - name: post-install

@@ -39,13 +39,18 @@ jobs:
           echo "NPM_TOKEN=${{ secrets.NPM_TOKEN }}" > .env
 
       - name: Install dependencies
-        run: sh .script/ci.sh
+        run: |
+          sh .script/pre-install.sh
+          yarn install
 
       - name: Build
         run: yarn build
 
       - name: Publish
         run: yarn npm publish --access=public
+
+      - name: post-install
+        run: sh .script/post-install.sh
 
       - name: Remove .env
         run: rm .env

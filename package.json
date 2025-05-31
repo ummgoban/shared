@@ -39,7 +39,8 @@
     "lint": "eslint src --ext .ts,.tsx --fix",
     "lint:check": "eslint src --ext .ts,.tsx",
     "format": "prettier --write src",
-    "format:check": "prettier --check src"
+    "format:check": "prettier --check src",
+    "test:all": "yarn lint:check && yarn format:check && yarn type-check && yarn test"
   },
   "repository": {
     "type": "git",

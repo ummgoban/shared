@@ -14,9 +14,11 @@ yarn add @ummgoban/shared
 # exports
 
 - `@ummgoban/shared`
-- `@ummgoban/shared/api-client`
-- `@ummgoban/shared/utils`
 - `@ummgoban/shared/types`
+- `@ummgoban/shared/utils`
+- `@ummgoban/shared/http`
+- `@ummgoban/shared/http/error`
+- `@ummgoban/shared/http/api-client`
 
 # dev
 
@@ -50,3 +52,8 @@ yarn lint
 ```bash
 yarn format
 ```
+
+# publish
+
+- `package.json`의 버전을 증가시킵니다. (`v[x].[y].[z]` 또는 `v[x].[y].[z]-[alpha|candy|rc].[n]`)
+- `main` 브랜치에 머지 후 `git tag`로 버전을 생성한 후 `git push`를 실행합니다.

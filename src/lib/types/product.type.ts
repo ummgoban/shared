@@ -4,6 +4,7 @@ export type ProductType = {
   image: string;
   originPrice: number;
   discountPrice: number;
+  discountRate: number;
   tags: TagType[];
   productStatus: 'IN_STOCK' | 'OUT_OF_STOCK' | 'HIDDEN';
   stock: number;

@@ -1,10 +1,10 @@
 import {createContext, useContext} from 'react';
-import {render} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import {describe, it, expect} from 'vitest';
 
-import {combineProviders} from './combine-provider';
+import {combineProviders, ProviderEntry, Providers} from './combine-provider';
 
 const TestContext = createContext<{value: string} | undefined>(undefined);
-
 const ThemeContext = createContext<{theme: string} | undefined>(undefined);
 
 const TestProvider = TestContext.Provider;
@@ -13,7 +13,7 @@ const ThemeProvider = ThemeContext.Provider;
 const TestComponent = () => {
   const context = useContext(TestContext);
   if (!context) return <div>no context</div>;
-  return <div>{context.value}</div>;
+  return <div data-testid="test-component">{context.value}</div>;
 };
 
 const TestMultiComponent = () => {
@@ -21,34 +21,42 @@ const TestMultiComponent = () => {
   const themeContext = useContext(ThemeContext);
   if (!context) return <div>no context</div>;
   return (
-    <div>
+    <div data-testid="multi-component">
       {context.value} {themeContext?.theme}
     </div>
   );
 };
 
 describe('CombineProviders', () => {
-  it('should render children', () => {
-    const CombineProviders = combineProviders([[TestProvider, {value: {value: 'test'}}]]);
-    const {container} = render(
+  it('should render children with a single provider', () => {
+    const providers = [{provider: TestProvider, props: {value: {value: 'test'}}}] as const satisfies Providers<
+      [ProviderEntry<typeof TestProvider>]
+    >;
+    const CombineProviders = combineProviders(providers);
+
+    render(
       <CombineProviders>
         <TestComponent />
       </CombineProviders>,
     );
-    expect(container).toHaveTextContent('test');
+    expect(screen.getByTestId('test-component')).toHaveTextContent('test');
   });
 
   it('should render children with multiple providers', () => {
-    const CombineProviders = combineProviders([
-      [TestProvider, {value: {value: 'test'}}],
-      [ThemeProvider, {value: {theme: 'dark'}}],
-    ]);
-    const {container} = render(
+    const providers = [
+      {provider: TestProvider, props: {value: {value: 'test'}}},
+      {provider: ThemeProvider, props: {value: {theme: 'dark'}}},
+    ] as const satisfies Providers<[ProviderEntry<typeof TestProvider>, ProviderEntry<typeof ThemeProvider>]>;
+    const CombineProviders = combineProviders(providers);
+
+    render(
       <CombineProviders>
         <TestMultiComponent />
       </CombineProviders>,
     );
-    expect(container).toHaveTextContent('test');
-    expect(container).toHaveTextContent('dark');
+
+    const component = screen.getByTestId('multi-component');
+    expect(component).toHaveTextContent('test');
+    expect(component).toHaveTextContent('dark');
   });
 });

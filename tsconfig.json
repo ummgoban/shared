@@ -19,6 +19,6 @@
       "@/*": ["*"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "vitest.setup.ts", "jest-dom.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

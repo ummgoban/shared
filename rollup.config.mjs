@@ -38,6 +38,7 @@ export default {
       sourceMap: true,
       rootDir: 'src',
       jsx: 'react-jsx',
+      exclude: ['**/*.{spec,test}.{ts,tsx}'],
     }),
   ],
 };

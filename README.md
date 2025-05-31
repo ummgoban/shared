@@ -14,6 +14,7 @@ yarn add @ummgoban/shared
 # exports
 
 - `@ummgoban/shared`
+- `@ummgoban/shared/react`
 - `@ummgoban/shared/types`
 - `@ummgoban/shared/utils`
 - `@ummgoban/shared/http`

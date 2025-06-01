@@ -1,8 +1,8 @@
 // http
-export * from './ummgoban-http';
+export * from './http';
 
 // lib
 export * from './lib';
 
 // react
-export * from './ummgoban-react';
+export * from './react';

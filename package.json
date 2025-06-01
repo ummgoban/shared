@@ -12,7 +12,7 @@
       "types": "./dist/index.d.ts"
     },
     "./react": {
-      "types": "./dist/ummgoban-react/index.d.ts"
+      "types": "./dist/react/index.d.ts"
     },
     "./types": {
       "types": "./dist/lib/types/index.d.ts"
@@ -21,13 +21,13 @@
       "types": "./dist/lib/utils/index.d.ts"
     },
     "./http": {
-      "types": "./dist/ummgoban-http/index.d.ts"
+      "types": "./dist/http/index.d.ts"
     },
     "./error": {
-      "types": "./dist/ummgoban-http/error/index.d.ts"
+      "types": "./dist/http/error/index.d.ts"
     },
     "./api-client": {
-      "types": "./dist/ummgoban-http/api-client/index.d.ts"
+      "types": "./dist/http/api-client/index.d.ts"
     }
   },
   "files": [

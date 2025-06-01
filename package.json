@@ -1,6 +1,6 @@
 {
   "name": "@ummgoban/shared",
-  "version": "0.0.1-alpha.16",
+  "version": "0.0.1-alpha.17",
   "description": "ummgoban 공통 패키지",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -11,40 +11,14 @@
       "import": "./dist/index.esm.js",
       "require": "./dist/index.js"
     },
-    "./react": {
-      "types": "./dist/react/index.d.ts",
-      "import": "./dist/react/index.esm.js",
-      "require": "./dist/react/index.js"
+    "./network": {
+      "types": "./dist/network/index.d.ts"
     },
     "./lib": {
-      "types": "./dist/lib/index.d.ts",
-      "import": "./dist/lib/index.esm.js",
-      "require": "./dist/lib/index.js"
+      "types": "./dist/lib/index.d.ts"
     },
-    "./lib/types": {
-      "types": "./dist/lib/types/index.d.ts",
-      "import": "./dist/lib/types/index.esm.js",
-      "require": "./dist/lib/types/index.js"
-    },
-    "./lib/utils": {
-      "types": "./dist/lib/utils/index.d.ts",
-      "import": "./dist/lib/utils/index.esm.js",
-      "require": "./dist/lib/utils/index.js"
-    },
-    "./http": {
-      "types": "./dist/http/index.d.ts",
-      "import": "./dist/http/index.esm.js",
-      "require": "./dist/http/index.js"
-    },
-    "./http/error": {
-      "types": "./dist/http/error/index.d.ts",
-      "import": "./dist/http/error/index.esm.js",
-      "require": "./dist/http/error/index.js"
-    },
-    "./http/api-client": {
-      "types": "./dist/http/api-client/index.d.ts",
-      "import": "./dist/http/api-client/index.esm.js",
-      "require": "./dist/http/api-client/index.js"
+    "./react": {
+      "types": "./dist/react/index.d.ts"
     }
   },
   "files": [
@@ -73,12 +47,12 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "peerDependencies": {
-    "axios": ">=1.7.4",
     "react": ">=18.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-commonjs": "^28.0.0",
+    "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-typescript": "^12.0.0",
     "@testing-library/dom": "^10.4.0",

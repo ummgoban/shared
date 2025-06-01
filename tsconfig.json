@@ -17,6 +17,7 @@
     "baseUrl": "./src",
     "paths": {
       "react": ["node_modules/react"],
+      "http": ["http"],
       "@ummgoban/*": ["src/*"]
     }
   },

@@ -797,6 +797,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rollup/plugin-json@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "@rollup/plugin-json@npm:6.1.0"
+  dependencies:
+    "@rollup/pluginutils": ^5.1.0
+  peerDependencies:
+    rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+  peerDependenciesMeta:
+    rollup:
+      optional: true
+  checksum: cc018d20c80242a2b8b44fae61a968049cf31bb8406218187cc7cda35747616594e79452dd65722e7da6dd825b392e90d4599d43cd4461a02fefa2865945164e
+  languageName: node
+  linkType: hard
+
 "@rollup/plugin-node-resolve@npm:^16.0.0":
   version: 16.0.1
   resolution: "@rollup/plugin-node-resolve@npm:16.0.1"
@@ -1308,6 +1322,7 @@ __metadata:
   dependencies:
     "@rollup/plugin-alias": ^5.1.1
     "@rollup/plugin-commonjs": ^28.0.0
+    "@rollup/plugin-json": ^6.1.0
     "@rollup/plugin-node-resolve": ^16.0.0
     "@rollup/plugin-typescript": ^12.0.0
     "@testing-library/dom": ^10.4.0
@@ -1338,7 +1353,6 @@ __metadata:
     vite: ^6.3.5
     vitest: ^3.1.4
   peerDependencies:
-    axios: ">=1.7.4"
     react: ">=18.0.0"
   languageName: unknown
   linkType: soft

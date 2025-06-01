@@ -1,33 +1,43 @@
 {
   "name": "@ummgoban/shared",
-  "version": "0.0.1-alpha.12",
+  "version": "0.0.1-alpha.13",
   "description": "ummgoban 공통 패키지",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.esm.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     },
     "./react": {
-      "types": "./dist/react/index.d.ts"
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js"
     },
     "./types": {
       "types": "./dist/lib/types/index.d.ts"
     },
     "./utils": {
-      "types": "./dist/lib/utils/index.d.ts"
+      "types": "./dist/lib/utils/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js"
     },
     "./http": {
-      "types": "./dist/http/index.d.ts"
+      "types": "./dist/http/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js"
     },
     "./error": {
-      "types": "./dist/http/error/index.d.ts"
+      "types": "./dist/http/error/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js"
     },
     "./api-client": {
-      "types": "./dist/http/api-client/index.d.ts"
+      "types": "./dist/http/api-client/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js"
     }
   },
   "files": [

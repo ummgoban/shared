@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "outDir": "dist/lib/utils",
+    "declarationDir": "dist/lib/utils",
+    "declaration": false
+  }
+}

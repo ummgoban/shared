@@ -11,3 +11,6 @@ dist
 !.yarn/sdks
 !.yarn/versions
 .yarnrc.yml.temp
+
+# rollup
+.rollup.cache

@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "outDir": "dist/http/api-client",
+    "declarationDir": "dist/http/api-client",
+    "declaration": false
+  }
+}

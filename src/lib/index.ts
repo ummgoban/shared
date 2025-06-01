@@ -1,5 +1,5 @@
 // utils
-export * from './uitls';
+export * from './utils';
 
 // types
 export * from './types';

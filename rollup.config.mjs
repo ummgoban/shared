@@ -112,4 +112,4 @@ const subpackageConfigs = subpackages.map(({name, input}) => ({
 }));
 
 // 모든 설정 내보내기
-export default [...subpackageConfigs];
+export default [mainConfig, ...subpackageConfigs];

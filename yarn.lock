@@ -1353,6 +1353,7 @@ __metadata:
     vite: ^6.3.5
     vitest: ^3.1.4
   peerDependencies:
+    axios: ">=1.7.4"
     react: ">=18.0.0"
   languageName: unknown
   linkType: soft

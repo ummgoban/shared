@@ -1,6 +1,6 @@
 {
   "name": "@ummgoban/shared",
-  "version": "0.0.1-alpha.17",
+  "version": "0.0.1-alpha.18",
   "description": "ummgoban 공통 패키지",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -47,6 +47,7 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "peerDependencies": {
+    "axios": ">=1.7.4",
     "react": ">=18.0.0"
   },
   "devDependencies": {

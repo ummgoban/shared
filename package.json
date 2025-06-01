@@ -1,6 +1,6 @@
 {
   "name": "@ummgoban/shared",
-  "version": "0.0.1-alpha.13",
+  "version": "0.0.1-alpha.14",
   "description": "ummgoban 공통 패키지",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -66,6 +66,7 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "peerDependencies": {
+    "axios": ">=1.7.4",
     "react": ">=18.0.0"
   },
   "devDependencies": {
@@ -82,6 +83,7 @@
     "@typescript-eslint/eslint-plugin": "^8.23.0",
     "@typescript-eslint/parser": "^8.23.0",
     "@vitejs/plugin-react": "^4.5.0",
+    "axios": "^1.7.4",
     "dotenv": "^16.4.7",
     "eslint": "^9.27.0",
     "eslint-config-prettier": "^10.1.5",
@@ -92,15 +94,12 @@
     "jiti": "^2.4.2",
     "jsdom": "^26.1.0",
     "prettier": "^3.5.3",
+    "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "rollup": "^4.41.1",
     "tslib": "^2.8.1",
     "typescript": "^5.0.0",
     "vite": "^6.3.5",
     "vitest": "^3.1.4"
-  },
-  "dependencies": {
-    "axios": "^1.7.4",
-    "react": "^18.0.0"
   }
 }

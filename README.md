@@ -1,7 +1,5 @@
 # shared
 
-[![Test Coverage](https://img.shields.io/badge/coverage-38.11%25-yellow.svg)](https://github.com/ummgoban/shared)
-
 ummgoban 공통 패키지입니다.
 
 - ummgoban 도메인에서 공용으로 사용하는 type, utils, http client, hook 등을 관리합니다.

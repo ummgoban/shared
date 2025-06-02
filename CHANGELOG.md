@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2](https://github.com/ummgoban/shared/compare/v0.0.1...v0.0.2) (2025-06-02)
+
+
+### ✨ 새로운 기능
+
+* **react:** use pull down refresh ([#5](https://github.com/ummgoban/shared/issues/5)) ([fd7945b](https://github.com/ummgoban/shared/commit/fd7945b2329f53ef3528c11dd1cb6a549c0f3b11))
+
+
+### 🔨 기타 변경사항
+
+* remove merged state ([41c784c](https://github.com/ummgoban/shared/commit/41c784cfe06582b1aec24319a1826e6a76bb6efc))
+* resolve recursive action; chore: create release & publish ([2d0b2bb](https://github.com/ummgoban/shared/commit/2d0b2bb0f04da61c8aedc2859d8d4d5202b58a56))
+
 ### [0.0.1](https://github.com/ummgoban/shared/compare/v0.0.1-alpha.9...v0.0.1) (2025-06-02)
 
 

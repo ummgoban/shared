@@ -1,0 +1,17 @@
+{
+  "types": [
+    {"type": "feat", "section": "✨ 새로운 기능"},
+    {"type": "fix", "section": "🐛 버그 수정"},
+    {"type": "docs", "section": "📝 문서 변경"},
+    {"type": "style", "section": "💄 코드 스타일 변경"},
+    {"type": "refactor", "section": "♻️ 코드 리팩토링"},
+    {"type": "perf", "section": "⚡️ 성능 개선"},
+    {"type": "test", "section": "✅ 테스트 추가/수정"},
+    {"type": "build", "section": "👷 빌드 시스템 변경"},
+    {"type": "ci", "section": "🔧 CI 설정 변경"},
+    {"type": "chore", "section": "🔨 기타 변경사항"}
+  ],
+  "releaseCommitMessageFormat": "release: {{currentTag}} 버전 릴리스",
+  "commitUrlFormat": "https://github.com/ummgoban/shared/commit/{{hash}}",
+  "compareUrlFormat": "https://github.com/ummgoban/shared/compare/{{previousTag}}...{{currentTag}}"
+}

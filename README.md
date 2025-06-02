@@ -55,8 +55,17 @@ yarn format
 
 # publish
 
-- `package.json`의 버전을 증가시킵니다. (`v[x].[y].[z]` 또는 `v[x].[y].[z]-[alpha|candy|rc].[n]`)
-- `main` 브랜치에 머지 후 `git tag`로 버전을 생성한 후 `git push`를 실행합니다.
+## 수동 배포
+
+1. `package.json`의 버전을 증가시킵니다. (`v[x].[y].[z]` 또는 `v[x].[y].[z]-[alpha|candy|rc].[n]`)
+2. `yarn build` 후 `yarn npm publish`를 실행합니다.
+
+## 자동 배포
+
+1. 개발이후 pull request를 생성합니다.
+2. pull request가 머지되면 github action이 실행됩니다.
+3. github action이 실행되면 `release: v[x].[y].[z]`로 pull request 가 생성됩니다.
+4. `release: v[x].[y].[z]` pull request가 머지되면 release tag가 생성되고 publish가 실행됩니다.
 
 # ummgoban productions
 

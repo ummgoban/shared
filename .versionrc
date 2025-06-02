@@ -14,5 +14,30 @@
   "releaseCommitMessageFormat": "release: {{currentTag}} 버전 릴리스",
   "commitUrlFormat": "https://github.com/ummgoban/shared/commit/{{hash}}",
   "compareUrlFormat": "https://github.com/ummgoban/shared/compare/{{previousTag}}...{{currentTag}}",
-  "includeNames": true
+  "includeNames": true,
+  "headerPartial": "# Changelog\n\nAll notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.\n",
+  "header": "# Changelog\n\nAll notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.\n",
+  "releaseCommitMessageFormat": "release: {{currentTag}} 버전 릴리스",
+  "issuePrefixes": ["#"],
+  "issueUrlFormat": "https://github.com/ummgoban/shared/issues/{{id}}",
+  "preset": "angular",
+  "skip": {
+    "bump": false,
+    "changelog": false,
+    "commit": false,
+    "tag": false
+  },
+  "bumpFiles": [
+    {
+      "filename": "package.json",
+      "type": "json"
+    }
+  ],
+  "packageFiles": [
+    {
+      "filename": "package.json",
+      "type": "json"
+    }
+  ],
+  "template": "{{> header}}\n{{#each releases}}\n{{#if @first}}{{else}}\n---\n\n{{/if}}\n## {{#if href}}[{{title}}]({{href}}){{else}}{{title}}{{/if}}{{#if tag}} - {{isoDate}}{{/if}}\n{{#if summary}}\n{{summary}}\n{{/if}}\n\n{{#each merges}}\n* {{#if commit.breaking}}**Breaking change:** {{/if}}{{message}}{{#if href}} ([#{{id}}]({{href}})){{/if}}\n{{/each}}\n{{#each fixes}}\n* {{#if commit.breaking}}**Breaking change:** {{/if}}{{commit.subject}}{{#each fixes}}{{#if href}} ([#{{id}}]({{href}})){{/if}}{{/each}}\n{{/each}}\n{{#each commits}}\n* {{#if breaking}}**Breaking change:** {{/if}}{{subject}}{{#if href}} ([{{shorthash}}]({{href}})){{/if}}\n{{/each}}\n{{/each}}"
 }

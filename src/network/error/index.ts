@@ -1,2 +1,2 @@
 // http error
-export * from './http-error.type';
+export * from './http-error';

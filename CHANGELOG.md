@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/ummgoban/shared/compare/v0.0.2...v0.0.3) (2025-06-02)
+
+
+### 🔨 기타 변경사항
+
+* update github action ([556d8c2](https://github.com/ummgoban/shared/commit/556d8c2569e4d223764bbcf871c039754c4465bb))
+
+
+### ✨ 새로운 기능
+
+* 상수 추가 ([#10](https://github.com/ummgoban/shared/issues/10)) ([63f6d59](https://github.com/ummgoban/shared/commit/63f6d5911c2c57cc11735daf2483adb4c8981c21))
+
 ### [0.0.2](https://github.com/ummgoban/shared/compare/v0.0.1...v0.0.2) (2025-06-02)
 
 

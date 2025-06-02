@@ -48,6 +48,12 @@ jobs:
           sh .script/pre-install.sh
           yarn install
 
+      - name: post-install
+        run: sh .script/post-install.sh
+
+      - name: Remove .env
+        run: rm .env
+
       - name: Configure Git
         run: |
           git config --global user.name "GitHub Actions Bot"
@@ -75,9 +81,3 @@ jobs:
           branch: auto-changelog-update
           base: main
           delete-branch: true
-
-      - name: post-install
-        run: sh .script/post-install.sh
-
-      - name: Remove .env
-        run: rm .env

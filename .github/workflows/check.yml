@@ -32,10 +32,6 @@ jobs:
           node-version: '20.x'
           cache: yarn
 
-      - name: Create .env
-        run: |
-          echo "NPM_TOKEN=${{ secrets.NPM_TOKEN }}" > .env
-
       - name: Install dependencies
         run: |
           sh .script/pre-install.sh
@@ -87,6 +83,3 @@ jobs:
 
       - name: post-install
         run: sh .script/post-install.sh
-
-      - name: Remove .env
-        run: rm .env

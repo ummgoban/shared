@@ -13,5 +13,6 @@
   ],
   "releaseCommitMessageFormat": "release: {{currentTag}} 버전 릴리스",
   "commitUrlFormat": "https://github.com/ummgoban/shared/commit/{{hash}}",
-  "compareUrlFormat": "https://github.com/ummgoban/shared/compare/{{previousTag}}...{{currentTag}}"
+  "compareUrlFormat": "https://github.com/ummgoban/shared/compare/{{previousTag}}...{{currentTag}}",
+  "includeNames": true
 }

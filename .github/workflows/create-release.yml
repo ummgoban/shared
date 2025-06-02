@@ -63,6 +63,7 @@ jobs:
           draft: false
           prerelease: false
   publish:
+    needs: create-release
     runs-on: ubuntu-latest
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

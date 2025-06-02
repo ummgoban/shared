@@ -32,23 +32,10 @@ NPM_TOKEN=ghp_...
 ## test
 
 ```bash
-yarn test          # 테스트 실행
-yarn test:watch    # 테스트 실시간 감시 모드
-yarn test:coverage # 테스트 커버리지 보고서 생성
+yarn test
+yarn test:watch
+yarn test:coverage
 ```
-
-## 테스트 커버리지
-
-현재 프로젝트의 테스트 커버리지는 38.11%입니다. 커버리지 보고서는 `coverage` 디렉토리에서 확인할 수 있습니다.
-
-```bash
-yarn test:coverage # 커버리지 보고서 생성 후 coverage/index.html 확인
-```
-
-커버리지 보고서에서 제외된 파일:
-- `**/index.ts` 파일들
-- 테스트 파일들 (`*.spec.ts`, `*.test.ts`)
-- 타입 정의 파일들 (`*.d.ts`)
 
 ## dev
 

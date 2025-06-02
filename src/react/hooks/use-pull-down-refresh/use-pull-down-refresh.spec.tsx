@@ -1,7 +1,6 @@
 import usePullDownRefresh from './use-pull-down-refresh';
 
 import {act, renderHook} from '@testing-library/react';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
 
 describe('usePullDownRefresh', () => {
   let callbackPromise: ReturnType<typeof vi.fn>;

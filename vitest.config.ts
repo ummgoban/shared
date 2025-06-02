@@ -7,6 +7,17 @@ export default defineConfig({
     setupFiles: './vitest.setup.ts',
     coverage: {
       reporter: ['text', 'json', 'html'],
+      exclude: [
+        '**/index.ts',
+        'node_modules/**',
+        '.yarn/**',
+        'dist/**',
+        '**/*.d.ts',
+        '**/*.type.ts',
+        '**/*.config.*',
+        '**/*.{test,spec}.{js,jsx,ts,tsx}',
+        '__tests__/**',
+      ],
     },
   },
 });

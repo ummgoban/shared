@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   changelog:
-    if: "github.event.pull_request.merged == true && !startsWith(github.event.pull_request.title, 'release: v')"
+    if: "!startsWith(github.event.pull_request.title, 'release: v')"
     runs-on: ubuntu-latest
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -16,7 +16,8 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["*"]
+      "react": ["node_modules/react"],
+      "@ummgoban/*": ["src/*"]
     }
   },
   "include": ["src/**/*", "vitest.setup.ts", "jest-dom.d.ts"],

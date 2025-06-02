@@ -29,7 +29,7 @@ const TestMultiComponent = () => {
 
 describe('CombineProviders', () => {
   it('should render children with a single provider', () => {
-    const providers = [{provider: TestProvider, props: {value: {value: 'test'}}}] as const satisfies Providers<
+    const providers = [{provider: TestProvider, props: {value: {value: 'test'}}}] satisfies Providers<
       [ProviderEntry<typeof TestProvider>]
     >;
     const CombineProviders = combineProviders(providers);
@@ -46,7 +46,7 @@ describe('CombineProviders', () => {
     const providers = [
       {provider: TestProvider, props: {value: {value: 'test'}}},
       {provider: ThemeProvider, props: {value: {theme: 'dark'}}},
-    ] as const satisfies Providers<[ProviderEntry<typeof TestProvider>, ProviderEntry<typeof ThemeProvider>]>;
+    ] satisfies Providers<[ProviderEntry<typeof TestProvider>, ProviderEntry<typeof ThemeProvider>]>;
     const CombineProviders = combineProviders(providers);
 
     render(

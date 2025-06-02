@@ -24,7 +24,7 @@ export type Providers<T extends readonly ProviderEntry<any>[]> = T;
  * const providers = [
  *   {provider: ThemeProvider, props: {value: {theme: 'dark'}}},
  *   {provider: TestProvider, props: {value: {value: 'test'}}},
- * ] as const satisfies Providers<[
+ * ]  satisfies Providers<[
  *   ProviderEntry<typeof ThemeProvider>,
  *   ProviderEntry<typeof TestProvider>,
  * ]>;

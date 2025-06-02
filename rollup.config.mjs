@@ -2,6 +2,7 @@ import typescript from '@rollup/plugin-typescript';
 import commonjs from '@rollup/plugin-commonjs';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import alias from '@rollup/plugin-alias';
+import json from '@rollup/plugin-json';
 import path from 'path';
 import {fileURLToPath} from 'url';
 
@@ -23,13 +24,18 @@ export default {
       sourcemap: true,
     },
   ],
-  external: [...Object.keys(pkg.peerDependencies || {}), ...Object.keys(pkg.dependencies || {})],
+  external: [...Object.keys(pkg.peerDependencies || {}), ...Object.keys(pkg.dependencies || {}), 'axios', 'react'],
   plugins: [
     alias({
       entries: [{find: '@', replacement: path.resolve(__dirname, 'src')}],
     }),
-    nodeResolve({extensions: ['.js', '.jsx', '.ts', '.tsx']}),
+    nodeResolve({
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      browser: true,
+      preferBuiltins: false,
+    }),
     commonjs(),
+    json(),
     typescript({
       tsconfig: './tsconfig.build.json',
       declaration: true,

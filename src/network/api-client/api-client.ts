@@ -1,8 +1,7 @@
 import axios, {AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosRequestConfig, AxiosError} from 'axios';
 
 import {CustomError} from '../error';
-
-import {SessionType, StorageKeyType} from '@/lib/types';
+import {SessionType, StorageKeyType} from 'lib/types';
 
 export interface ApiClientOptions {
   serverApiBaseUrl: string;

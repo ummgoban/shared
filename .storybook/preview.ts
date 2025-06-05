@@ -8,6 +8,9 @@ const preview: Preview = {
        date: /Date$/i,
       },
     },
+    reactNative: {
+      // React Native 옵션 설정
+    },
   },
 };
 

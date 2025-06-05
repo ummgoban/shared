@@ -6,3 +6,6 @@ export * from './lib';
 
 // react
 export * from './react';
+
+// react-native
+export * from './react-native';

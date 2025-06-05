@@ -4,9 +4,7 @@ import Button from './Button';
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
   component: Button,
-  parameters: {
-    // 필요한 경우 여기에 추가 파라미터 설정
-  },
+  parameters: {},
   argTypes: {
     title: {control: 'text'},
     color: {control: 'color'},

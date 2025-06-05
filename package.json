@@ -19,6 +19,9 @@
     },
     "./react": {
       "types": "./dist/react/index.d.ts"
+    },
+    "./react-native": {
+      "types": "./dist/react-native/index.d.ts"
     }
   },
   "files": [
@@ -38,6 +41,7 @@
     "format:check": "prettier --check src",
     "test:all": "yarn lint:check && yarn format:check && yarn type-check && yarn test",
     "release": "standard-version",
+    "release:local": "standard-version --skip-tag --skip-publish",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

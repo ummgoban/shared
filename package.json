@@ -1,6 +1,6 @@
 {
   "name": "@ummgoban/shared",
-  "version": "0.0.4-canary.1",
+  "version": "0.0.4-canary.2",
   "description": "ummgoban 공통 패키지",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

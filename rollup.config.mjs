@@ -25,7 +25,7 @@ const createCommonPlugins = () => [
 ];
 
 // 메인 패키지용 TypeScript 플러그인
-const createMainTypescriptPlugin = () => 
+const createMainTypescriptPlugin = () =>
   typescript({
     tsconfig: './tsconfig.build.json',
     declaration: true,
@@ -37,21 +37,14 @@ const createMainTypescriptPlugin = () =>
     exclude: ['**/*.{spec,test}.{ts,tsx}'],
   });
 
-// React Native 패키지용 TypeScript 플러그인
-const createReactNativeTypescriptPlugin = () => 
-  typescript({
-    tsconfig: './tsconfig.build.json',
-    declaration: true,
-    declarationDir: 'dist/react-native',
-    outDir: 'dist/react-native',
-    sourceMap: true,
-    rootDir: 'src/react-native',
-    jsx: 'react-jsx',
-    exclude: ['**/*.{spec,test}.{ts,tsx}'],
-  });
-
 // 외부 의존성 설정
-const external = [...Object.keys(pkg.peerDependencies || {}), ...Object.keys(pkg.dependencies || {}), 'axios', 'react', 'react-native'];
+const external = [
+  ...Object.keys(pkg.peerDependencies || {}),
+  ...Object.keys(pkg.dependencies || {}),
+  'axios',
+  'react',
+  'react-native',
+];
 
 // 메인 패키지 설정
 const mainConfig = {
@@ -72,23 +65,4 @@ const mainConfig = {
   plugins: [...createCommonPlugins(), createMainTypescriptPlugin()],
 };
 
-// React Native 패키지 설정
-const reactNativeConfig = {
-  input: 'src/react-native/index.ts',
-  output: [
-    {
-      file: 'dist/react-native/index.js',
-      format: 'cjs',
-      sourcemap: true,
-    },
-    {
-      file: 'dist/react-native/index.esm.js',
-      format: 'esm',
-      sourcemap: true,
-    },
-  ],
-  external,
-  plugins: [...createCommonPlugins(), createReactNativeTypescriptPlugin()],
-};
-
-export default [mainConfig, reactNativeConfig];
+export default [mainConfig];

@@ -1,6 +1,6 @@
 {
   "name": "@ummgoban/shared",
-  "version": "0.0.4-canary.0",
+  "version": "0.0.4-canary.1",
   "description": "ummgoban 공통 패키지",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -21,9 +21,7 @@
       "types": "./dist/react/index.d.ts"
     },
     "./react-native": {
-      "types": "./dist/react-native/index.d.ts",
-      "import": "./dist/react-native/index.esm.js",
-      "require": "./dist/react-native/index.js"
+      "types": "./dist/react-native/index.d.ts"
     }
   },
   "files": [
@@ -43,7 +41,7 @@
     "format:check": "prettier --check src",
     "test:all": "yarn lint:check && yarn format:check && yarn type-check && yarn test",
     "release": "standard-version",
-    "release:local": "standard-version --skip-tag --skip-publish",
+    "publish:local": "./.script/publish-local.sh",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

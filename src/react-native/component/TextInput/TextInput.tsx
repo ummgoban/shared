@@ -1,7 +1,20 @@
-import {TextInputProps as RNTextInputProps, StyleProp, TextStyle, ViewStyle} from 'react-native';
+import {
+  TextInput as RNTextInput,
+  TextInputProps as RNTextInputProps,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 
-import {useState} from 'react';
+import {forwardRef, ForwardRefRenderFunction, useImperativeHandle, useRef, useState, useEffect} from 'react';
 import S from './TextInput.style';
+
+export interface TextInputRef {
+  focus: () => void;
+  blur: () => void;
+  clear: () => void;
+  getValue: () => string | undefined;
+}
 
 export type TextInputProps = {
   label?: string;
@@ -20,35 +33,61 @@ export type TextInputProps = {
  * label={undefined}: label을 사용할 경우 아웃라인에 표시되기 때문에 undefined 이용
  *
  */
-const TextInput = ({
-  label,
-  labelPosition = 'top',
-  validation,
-  errorMessage,
-  errorStyle,
-  style,
-  value,
-  onChange,
-  TextInputProps,
-}: TextInputProps) => {
-  const isDefault = !value;
-  const isError = value && validation && errorMessage && !validation(value);
+const TextInputComponent: ForwardRefRenderFunction<TextInputRef, TextInputProps> = (
+  {
+    label,
+    labelPosition = 'top',
+    validation,
+    errorMessage,
+    errorStyle,
+    style,
+    value: externalValue,
+    onChange,
+    TextInputProps,
+  },
+  ref,
+) => {
+  const inputRef = useRef<RNTextInput>(null);
+  const [internalValue, setInternalValue] = useState<string>('');
 
-  const [textInputCondition, setTextInputCondition] = useState<'default' | 'focus'>('default');
+  // uncontrolled 컴포넌트로 설계하기 위해 내부 상태만 사용
+  // 외부에서 초기값을 제공하는 경우에만 사용하고 이후에는 내부 상태만 사용
+
+  // 초기값 설정 (처음 렌더링시에만 실행)
+  useEffect(() => {
+    if (externalValue !== undefined) {
+      setInternalValue(externalValue);
+    }
+  }, []);
+
+  const isDefault = !internalValue;
+  const isError = internalValue && validation && errorMessage && !validation(internalValue);
+  const isFocus = inputRef.current?.isFocused();
+
+  useImperativeHandle(ref, () => ({
+    focus: () => inputRef.current?.focus(),
+    blur: () => inputRef.current?.blur(),
+    clear: () => {
+      inputRef.current?.clear();
+      setInternalValue('');
+    },
+    getValue: () => internalValue,
+  }));
 
   return (
     <S.Container style={style}>
       <S.TextInputWrapper labelPosition={labelPosition}>
-        {label && <S.Label>{label}</S.Label>}
+        {label && <S.Label onPress={() => inputRef.current?.focus()}>{label}</S.Label>}
         <S.TextInputContainer>
           <S.TextInput
+            ref={inputRef}
             {...TextInputProps}
             condition={(() => {
               // 에러 상태가 가장 우선순위가 높음
               if (isError) return 'error';
 
               // 포커스 상태이면서 에러가 아닌 경우 primary 반환
-              if (textInputCondition === 'focus') return 'primary';
+              if (isFocus) return 'primary';
 
               // 기본값(입력값 없음) 상태일 경우 default 반환
               if (isDefault) return 'default';
@@ -56,15 +95,10 @@ const TextInput = ({
               // 그 외의 경우 primary 반환
               return 'primary';
             })()}
-            value={value}
-            onChangeText={onChange}
-            onFocus={e => {
-              TextInputProps?.onFocus?.(e);
-              setTextInputCondition('focus');
-            }}
-            onBlur={e => {
-              TextInputProps?.onBlur?.(e);
-              setTextInputCondition('default');
+            value={internalValue}
+            onChangeText={(text: string) => {
+              setInternalValue(text);
+              onChange?.(text);
             }}
           />
         </S.TextInputContainer>
@@ -77,5 +111,7 @@ const TextInput = ({
     </S.Container>
   );
 };
+
+const TextInput = forwardRef(TextInputComponent);
 
 export default TextInput;

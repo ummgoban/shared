@@ -48,7 +48,9 @@ const TextInputComponent: ForwardRefRenderFunction<TextInputRef, TextInputProps>
       inputRef.current?.clear();
       setInternalValue('');
     },
-    getValue: () => internalValue,
+    get value() {
+      return internalValue;
+    },
   }));
 
   return (

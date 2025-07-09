@@ -4,7 +4,7 @@ export interface TextInputRef {
   focus: () => void;
   blur: () => void;
   clear: () => void;
-  getValue: () => string | undefined;
+  value: string;
 }
 
 export type TextInputProps = {

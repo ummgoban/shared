@@ -131,7 +131,7 @@ export const WithForm = (args: TextInputProps) => {
           {...args}
         />
         <View style={{marginVertical: 8}}>
-          <Button onPress={() => setResult(inputRef.current?.getValue())} title="Submit" />
+          <Button onPress={() => setResult(inputRef.current?.value)} title="Submit" />
         </View>
       </View>
       <View>

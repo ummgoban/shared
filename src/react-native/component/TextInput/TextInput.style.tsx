@@ -1,44 +1,84 @@
 import styled from '@emotion/native';
+
+import type {TextInputProps} from './TextInput.type';
+
 import theme from '../../theme/theme';
 
+// TODO: labelPosition에 따른 스타일을 적용하기
+
 const S = {
-  Container: styled.View`
+  Container: styled.View<{full: boolean}>`
     display: flex;
     flex-direction: column;
 
-    width: 100%;
+    ${props => props.full && `width: 100%;`}
   `,
 
-  TextInputWrapper: styled.View<{labelPosition: 'top' | 'left'}>`
+  TextInputWrapper: styled.View<{labelPosition: Required<TextInputProps['labelPosition']>}>`
     display: flex;
     gap: 8px;
 
-    ${props => props.labelPosition === 'top' && `flex-direction: column;`}
-    ${props => props.labelPosition === 'left' && `flex-direction: row;`}
+    ${({labelPosition}) => {
+      if (!labelPosition) return '';
+      const [mainPosition, subPosition] = labelPosition.split('-');
+      let style = '';
+      if (mainPosition === 'top' || mainPosition === 'bottom') {
+        style = mainPosition === 'bottom' ? 'flex-direction: column-reverse' : 'flex-direction: column';
+
+        if (subPosition === 'left') {
+          style += 'justify-content: flex-start';
+        } else if (subPosition === 'right') {
+          style += 'justify-content: flex-end';
+        } else {
+          style += 'justify-content: center';
+        }
+      } else if (mainPosition === 'left' || mainPosition === 'right') {
+        style = mainPosition === 'right' ? 'flex-direction: row-reverse' : 'flex-direction: row';
+        if (subPosition === 'top') {
+          style += 'align-items: flex-start';
+        } else if (subPosition === 'bottom') {
+          style += 'align-items: flex-end';
+        } else {
+          style += 'align-items: center';
+        }
+      }
+      return style;
+    }}
   `,
 
-  TextInputContainer: styled.View`
-    width: 100%;
+  TextInputContainer: styled.View<{full: boolean}>`
     height: 48px;
+
+    ${props => props.full && `width: 100%;`}
   `,
 
   Label: styled.Text`
     ${theme.fonts.body1}
   `,
 
-  TextInput: styled.TextInput<{condition: 'default' | 'error' | 'primary'}>`
+  TextInput: styled.TextInput<{
+    condition: 'default' | 'error' | 'primary';
+    labelPosition: Required<TextInputProps['labelPosition']>;
+  }>`
     background-color: white;
     height: 48px;
     outline-style: solid;
     outline-width: 1px;
     border-radius: 4px;
 
-    margin-horizontal: 2px;
+    margin: ${({labelPosition}) => {
+      if (!labelPosition) return '0 2px';
+      const [mainPosition] = labelPosition.split('-');
+      if (mainPosition === 'top' || mainPosition === 'bottom') {
+        return '0 2px';
+      }
+      return '2px 0';
+    }};
     padding-horizontal: 8px;
 
-    ${props => props.condition === 'default' && `outline-color: ${theme.colors.dark};`}
-    ${props => props.condition === 'error' && `outline-color: ${theme.colors.error};`}
-    ${props => props.condition === 'primary' && `outline-color: ${theme.colors.primary};`}
+    ${({condition}) => condition === 'default' && `outline-color: ${theme.colors.dark};`}
+    ${({condition}) => condition === 'error' && `outline-color: ${theme.colors.error};`}
+    ${({condition}) => condition === 'primary' && `outline-color: ${theme.colors.primary};`}
   `,
 
   ErrorContainer: styled.View`

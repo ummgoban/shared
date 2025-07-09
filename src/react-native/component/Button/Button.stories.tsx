@@ -6,8 +6,8 @@ const meta: Meta<typeof Button> = {
   component: Button,
   parameters: {},
   argTypes: {
-    title: {control: 'text'},
-    color: {control: 'color'},
+    children: {control: 'text'},
+    themeColor: {control: 'radio', options: ['primary', 'secondary', 'tertiary']},
     disabled: {control: 'boolean'},
     onPress: {action: 'pressed'},
   },
@@ -18,28 +18,49 @@ type Story = StoryObj<typeof Button>;
 
 export const Default: Story = {
   args: {
-    title: '버튼',
-    color: '#007AFF',
+    children: '버튼',
+    themeColor: 'primary',
   },
 };
 
 export const Primary: Story = {
   args: {
-    title: '확인',
-    color: '#007AFF',
+    children: '확인',
+    themeColor: 'primary',
   },
 };
 
 export const Secondary: Story = {
   args: {
-    title: '취소',
-    color: '#FF3B30',
+    children: '확인',
+    themeColor: 'secondary',
+  },
+};
+
+export const Tertiary: Story = {
+  args: {
+    children: '확인',
+    themeColor: 'tertiary',
+  },
+};
+
+export const Error: Story = {
+  args: {
+    children: '오류',
+    themeColor: 'error',
+  },
+};
+
+export const Warning: Story = {
+  args: {
+    children: '취소',
+    themeColor: 'warning',
   },
 };
 
 export const Disabled: Story = {
   args: {
-    title: '비활성화',
+    children: '비활성화',
     disabled: true,
   },
 };

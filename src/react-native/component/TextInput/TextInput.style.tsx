@@ -77,8 +77,13 @@ const S = {
   }>`
     background-color: white;
     height: 48px;
+
+    border-style: solid;
+    border-width: 1px;
+
     outline-style: solid;
     outline-width: 1px;
+
     border-radius: 4px;
 
     margin: 2px;
@@ -88,11 +93,11 @@ const S = {
     ${({condition}) => {
       switch (condition) {
         case 'default':
-          return `outline-color: ${theme.colors.dark};`;
+          return `border-color: ${theme.colors.dark}; outline-color: ${theme.colors.dark};`;
         case 'error':
-          return `outline-color: ${theme.colors.error};`;
+          return `border-color: ${theme.colors.error}; outline-color: ${theme.colors.error};`;
         case 'primary':
-          return `outline-color: ${theme.colors.primary};`;
+          return `border-color: ${theme.colors.primary}; outline-color: ${theme.colors.primary};`;
       }
     }}
   `,

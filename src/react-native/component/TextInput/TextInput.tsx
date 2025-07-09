@@ -55,11 +55,10 @@ const TextInputComponent: ForwardRefRenderFunction<TextInputRef, TextInputProps>
     <S.Container full={full} style={style}>
       <S.TextInputWrapper labelPosition={labelPosition}>
         {label && <S.Label onPress={() => inputRef.current?.focus()}>{label}</S.Label>}
-        <S.TextInputContainer full={full}>
+        <S.TextInputContainer full={full} labelPosition={labelPosition}>
           <S.TextInput
             ref={inputRef}
             {...TextInputProps}
-            labelPosition={labelPosition}
             condition={(() => {
               // 에러 상태가 가장 우선순위가 높음
               if (isError) return 'error';

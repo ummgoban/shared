@@ -44,18 +44,16 @@ export default meta;
 export const Default = (args: TextInputProps) => {
   const inputRef = useRef<TextInputRef>(null);
 
-  return (
-    <TextInput
-      ref={inputRef}
-      label="text label"
-      errorMessage="text must be more than 3 characters"
-      validation={(value: string) => value.length > 3}
-      {...args}
-    />
-  );
+  return <TextInput ref={inputRef} {...args} />;
 };
 
-export const WithLabelVertical = (args: TextInputProps) => {
+export const Full = (args: TextInputProps) => {
+  const inputRef = useRef<TextInputRef>(null);
+
+  return <TextInput ref={inputRef} full {...args} />;
+};
+
+export const WithLabel = (args: TextInputProps) => {
   const inputRef = useRef<TextInputRef>(null);
 
   return (
@@ -70,6 +68,22 @@ export const WithLabelVertical = (args: TextInputProps) => {
   );
 };
 
+export const WithLabelFull = (args: TextInputProps) => {
+  const inputRef = useRef<TextInputRef>(null);
+
+  return (
+    <TextInput
+      ref={inputRef}
+      label="text label"
+      labelPosition="top-left"
+      errorMessage="text must be more than 3 characters"
+      validation={(value: string) => value.length > 3}
+      full
+      {...args}
+    />
+  );
+};
+
 export const WithLabelHorizontal = (args: TextInputProps) => {
   const inputRef = useRef<TextInputRef>(null);
 
@@ -77,9 +91,25 @@ export const WithLabelHorizontal = (args: TextInputProps) => {
     <TextInput
       ref={inputRef}
       label="text label"
-      labelPosition="left-top"
+      labelPosition="left-middle"
       errorMessage="text must be more than 3 characters"
       validation={(value: string) => value.length > 3}
+      {...args}
+    />
+  );
+};
+
+export const WithLabelHorizontalFull = (args: TextInputProps) => {
+  const inputRef = useRef<TextInputRef>(null);
+
+  return (
+    <TextInput
+      ref={inputRef}
+      label="text label"
+      labelPosition="left-middle"
+      errorMessage="text must be more than 3 characters"
+      validation={(value: string) => value.length > 3}
+      full
       {...args}
     />
   );
@@ -97,6 +127,7 @@ export const WithForm = (args: TextInputProps) => {
           label="text label"
           errorMessage="text must be more than 3 characters"
           validation={(value: string) => value.length > 3}
+          full
           {...args}
         />
         <View style={{marginVertical: 8}}>

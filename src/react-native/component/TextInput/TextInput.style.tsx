@@ -1,64 +1,79 @@
-import styled from '@emotion/native';
+import styled, {css} from '@emotion/native';
 
 import type {TextInputProps} from './TextInput.type';
 
 import theme from '../../theme/theme';
 
-// TODO: labelPosition에 따른 스타일을 적용하기
-
 const S = {
   Container: styled.View<{full: boolean}>`
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex-basis: auto;
 
-    ${props => props.full && `width: 100%;`}
+    ${({full}) => (full ? `width: 100%;` : 'width: max-content')}
   `,
 
   TextInputWrapper: styled.View<{labelPosition: Required<TextInputProps['labelPosition']>}>`
     display: flex;
+
     gap: 8px;
 
     ${({labelPosition}) => {
       if (!labelPosition) return '';
       const [mainPosition, subPosition] = labelPosition.split('-');
-      let style = '';
+      const style: string[] = [];
+
       if (mainPosition === 'top' || mainPosition === 'bottom') {
-        style = mainPosition === 'bottom' ? 'flex-direction: column-reverse' : 'flex-direction: column';
+        style.push(mainPosition === 'bottom' ? 'flex-direction: column-reverse' : 'flex-direction: column');
 
         if (subPosition === 'left') {
-          style += 'justify-content: flex-start';
+          style.push('align-items: flex-start');
         } else if (subPosition === 'right') {
-          style += 'justify-content: flex-end';
+          style.push('align-items: flex-end');
         } else {
-          style += 'justify-content: center';
+          style.push('align-items: center');
         }
       } else if (mainPosition === 'left' || mainPosition === 'right') {
-        style = mainPosition === 'right' ? 'flex-direction: row-reverse' : 'flex-direction: row';
+        style.push(mainPosition === 'right' ? 'flex-direction: row-reverse' : 'flex-direction: row');
         if (subPosition === 'top') {
-          style += 'align-items: flex-start';
+          style.push('align-items: flex-start');
         } else if (subPosition === 'bottom') {
-          style += 'align-items: flex-end';
+          style.push('align-items: flex-end');
         } else {
-          style += 'align-items: center';
+          style.push('align-items: center');
         }
       }
-      return style;
+      return style.join(';');
     }}
   `,
 
-  TextInputContainer: styled.View<{full: boolean}>`
+  TextInputContainer: styled.View<{full: boolean; labelPosition: Required<TextInputProps['labelPosition']>}>`
     height: 48px;
 
-    ${props => props.full && `width: 100%;`}
+    ${({full, labelPosition}) => {
+      if (!full) return '';
+
+      const [mainPosition] = labelPosition?.split('-') || [];
+
+      return css`
+        flex-shrink: 1;
+        flex-grow: 1;
+        flex-basis: auto;
+
+        ${mainPosition === 'top' || mainPosition === 'bottom' ? 'width: 100%;' : ''}
+      `;
+    }}
   `,
 
   Label: styled.Text`
+    width: max-content;
     ${theme.fonts.body1}
   `,
 
   TextInput: styled.TextInput<{
     condition: 'default' | 'error' | 'primary';
-    labelPosition: Required<TextInputProps['labelPosition']>;
   }>`
     background-color: white;
     height: 48px;
@@ -66,19 +81,20 @@ const S = {
     outline-width: 1px;
     border-radius: 4px;
 
-    margin: ${({labelPosition}) => {
-      if (!labelPosition) return '0 2px';
-      const [mainPosition] = labelPosition.split('-');
-      if (mainPosition === 'top' || mainPosition === 'bottom') {
-        return '0 2px';
-      }
-      return '2px 0';
-    }};
+    margin: 2px;
+
     padding-horizontal: 8px;
 
-    ${({condition}) => condition === 'default' && `outline-color: ${theme.colors.dark};`}
-    ${({condition}) => condition === 'error' && `outline-color: ${theme.colors.error};`}
-    ${({condition}) => condition === 'primary' && `outline-color: ${theme.colors.primary};`}
+    ${({condition}) => {
+      switch (condition) {
+        case 'default':
+          return `outline-color: ${theme.colors.dark};`;
+        case 'error':
+          return `outline-color: ${theme.colors.error};`;
+        case 'primary':
+          return `outline-color: ${theme.colors.primary};`;
+      }
+    }}
   `,
 
   ErrorContainer: styled.View`

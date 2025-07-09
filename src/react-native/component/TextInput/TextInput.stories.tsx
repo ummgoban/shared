@@ -141,3 +141,60 @@ export const WithForm = (args: TextInputProps) => {
     </>
   );
 };
+
+export const LabelComponent = (args: TextInputProps) => {
+  const inputRef = useRef<TextInputRef>(null);
+
+  return (
+    <TextInput
+      ref={inputRef}
+      label={<Text style={{color: 'red', fontSize: 16}}>custom label component</Text>}
+      labelPosition="left-middle"
+      errorMessage="text must be more than 3 characters"
+      validation={(value: string) => value.length > 3}
+      full
+      {...args}
+    />
+  );
+};
+
+export const CustomStyle = (args: TextInputProps) => {
+  const inputRef = useRef<TextInputRef>(null);
+
+  const style = {
+    width: 200,
+  };
+
+  const errorStyle = {
+    color: 'yellow',
+  };
+
+  const TextInputProps: TextInputProps['TextInputProps'] = {
+    placeholder: 'placeholder',
+    placeholderTextColor: 'gray',
+  };
+
+  return (
+    <View>
+      <View>
+        <Text style={{marginVertical: 4, fontSize: 16}}>CustomStyle</Text>
+        <Text>style: {JSON.stringify(style)}</Text>
+        <Text>errorStyle: {JSON.stringify(errorStyle)}</Text>
+        <Text>TextInputProps: {JSON.stringify(TextInputProps)}</Text>
+      </View>
+      <View style={{height: 2, backgroundColor: 'gray', width: '100%', marginVertical: 4}} />
+      <TextInput
+        ref={inputRef}
+        label="text label"
+        labelPosition="left-middle"
+        errorMessage="text must be more than 3 characters"
+        validation={(value: string) => value.length > 3}
+        full
+        style={style}
+        errorStyle={errorStyle}
+        TextInputProps={TextInputProps}
+        {...args}
+      />
+    </View>
+  );
+};

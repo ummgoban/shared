@@ -8,7 +8,7 @@ export interface TextInputRef {
 }
 
 export type TextInputProps = {
-  label?: string;
+  label?: React.ReactNode;
   labelPosition?:
     | 'top-left'
     | 'top-right'

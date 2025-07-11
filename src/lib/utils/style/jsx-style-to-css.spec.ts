@@ -1,4 +1,4 @@
-import {jsxStyleToCss} from './css';
+import {jsxStyleToCss} from './jsx-style-to-css';
 
 describe('jsxStyleToCss', () => {
   it('should convert style object to css string', () => {

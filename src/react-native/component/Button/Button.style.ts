@@ -1,6 +1,6 @@
 import styled from '@emotion/native';
 
-import theme from '../../theme/theme';
+import {theme} from '@/react/emotion/theme';
 
 const S = {
   Button: styled.TouchableOpacity<{themeColor: keyof (typeof theme)['colors']}>`
@@ -13,7 +13,7 @@ const S = {
 
     transition: background-color opacity 0.3s ease-in-out;
 
-    ${({themeColor}) => {
+    ${({themeColor, theme}) => {
       const defaultColorStyle = [`background-color: ${theme.colors[themeColor]};`];
 
       if (themeColor.startsWith('secondary')) {

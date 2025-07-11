@@ -14,11 +14,11 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
+      "@/*": ["src/*"],
       "react": ["node_modules/react"],
-      "react-native": ["node_modules/react-native"],
-      "@ummgoban/*": ["src/*"]
+      "react-native": ["node_modules/react-native"]
     }
   },
   "include": ["src/**/*", "vitest.setup.ts", "jest-dom.d.ts", ".storybook/**/*"],

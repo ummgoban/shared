@@ -1,3 +1,3 @@
 export * from './component';
 
-export * from './theme';
+export * from '../react/emotion/theme';

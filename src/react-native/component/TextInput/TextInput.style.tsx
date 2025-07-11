@@ -2,8 +2,6 @@ import styled, {css} from '@emotion/native';
 
 import type {TextInputProps} from './TextInput.type';
 
-import theme from '../../theme/theme';
-
 const S = {
   Container: styled.View<{full: boolean}>`
     display: flex;
@@ -69,7 +67,7 @@ const S = {
 
   Label: styled.Text`
     width: max-content;
-    ${theme.fonts.body1}
+    ${({theme}) => theme.fonts.body1}
   `,
 
   TextInput: styled.TextInput<{
@@ -90,7 +88,7 @@ const S = {
 
     padding-horizontal: 8px;
 
-    ${({condition}) => {
+    ${({condition, theme}) => {
       switch (condition) {
         case 'default':
           return `border-color: ${theme.colors.dark}; outline-color: ${theme.colors.dark};`;
@@ -112,7 +110,7 @@ const S = {
   `,
 
   ErrorText: styled.Text`
-    color: ${theme.colors.error};
+    color: ${({theme}) => theme.colors.error};
 
     font-family: Pretendard;
     font-size: 14px;

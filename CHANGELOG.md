@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/ummgoban/shared/compare/v0.0.3...v0.0.4) (2025-07-11)
+
+
+### 🔨 기타 변경사항
+
+* 체인지 로그 포멧 변경 ([#13](https://github.com/ummgoban/shared/issues/13)) ([6352b81](https://github.com/ummgoban/shared/commit/6352b8139623f6c63c8218f29419b2d443984cf4))
+* 항상 release를 생성한 이후에 배포 ([eb8a341](https://github.com/ummgoban/shared/commit/eb8a341f3e34e30f2755aff6236f3174bd9e1b3a))
+
+
+### ✨ 새로운 기능
+
+* **react-native:** react native storybook + publish ([#15](https://github.com/ummgoban/shared/issues/15)) ([4107e49](https://github.com/ummgoban/shared/commit/4107e496edbeee5937c6f9340ebc83b253e38a95))
+
 ### [0.0.3](https://github.com/ummgoban/shared/compare/v0.0.2...v0.0.3) (2025-06-02)
 
 

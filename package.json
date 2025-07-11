@@ -22,6 +22,9 @@
     },
     "./react-native": {
       "types": "./dist/react-native/index.d.ts"
+    },
+    "./emotion": {
+      "types": "./dist/emotion/index.d.ts"
     }
   },
   "files": [

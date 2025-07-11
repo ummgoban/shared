@@ -1,6 +1,6 @@
 import styled from '@emotion/native';
 
-import {theme} from '@/react/emotion/theme';
+import {theme} from '@/emotion/theme';
 
 const S = {
   Button: styled.TouchableOpacity<{themeColor: keyof (typeof theme)['colors']}>`

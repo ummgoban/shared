@@ -27,7 +27,7 @@ export type TextInputProps = {
   errorStyle?: StyleProp<TextStyle>;
   style?: StyleProp<ViewStyle>;
   value?: string;
+  defaultValue?: string;
   full?: boolean;
   onChange?: (text: string) => void;
-  TextInputProps?: RNTextInputProps;
-};
+} & RNTextInputProps;

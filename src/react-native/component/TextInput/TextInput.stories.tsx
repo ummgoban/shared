@@ -35,7 +35,6 @@ const meta: Meta<typeof TextInput> = {
         'right-bottom',
       ],
     },
-    TextInputProps: {control: 'object'},
   },
 };
 
@@ -51,6 +50,12 @@ export const Full = (args: TextInputProps) => {
   const inputRef = useRef<TextInputRef>(null);
 
   return <TextInput ref={inputRef} full {...args} />;
+};
+
+export const ReadOnly = (args: TextInputProps) => {
+  const inputRef = useRef<TextInputRef>(null);
+
+  return <TextInput ref={inputRef} readOnly defaultValue="readonly" {...args} />;
 };
 
 export const WithLabel = (args: TextInputProps) => {
@@ -169,7 +174,7 @@ export const CustomStyle = (args: TextInputProps) => {
     color: 'yellow',
   };
 
-  const TextInputProps: TextInputProps['TextInputProps'] = {
+  const TextInputProps = {
     placeholder: 'placeholder',
     placeholderTextColor: 'gray',
   };
@@ -192,7 +197,7 @@ export const CustomStyle = (args: TextInputProps) => {
         full
         style={style}
         errorStyle={errorStyle}
-        TextInputProps={TextInputProps}
+        {...TextInputProps}
         {...args}
       />
     </View>

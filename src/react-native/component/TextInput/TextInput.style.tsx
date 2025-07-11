@@ -98,6 +98,11 @@ const S = {
           return `border-color: ${theme.colors.primary}; outline-color: ${theme.colors.primary};`;
       }
     }}
+
+    :readonly {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
   `,
 
   ErrorContainer: styled.View`

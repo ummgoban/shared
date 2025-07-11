@@ -1,5 +1,5 @@
+import {forwardRef, ForwardRefRenderFunction, useImperativeHandle, useRef, useState} from 'react';
 import {TextInput as RNTextInput} from 'react-native';
-import {forwardRef, ForwardRefRenderFunction, useEffect, useImperativeHandle, useRef, useState} from 'react';
 
 import type {TextInputProps, TextInputRef} from './TextInput.type';
 
@@ -18,33 +18,46 @@ const TextInputComponent: ForwardRefRenderFunction<TextInputRef, TextInputProps>
     errorMessage,
     errorStyle,
     style,
-    value: externalValue,
+    defaultValue = '',
+    value,
     full = false,
     onChange,
-    TextInputProps,
+    ...rest
   },
   ref,
 ) => {
   const inputRef = useRef<RNTextInput>(null);
 
-  const [internalValue, setInternalValue] = useState<string>('');
-
-  useEffect(() => {
-    if (externalValue !== undefined) {
-      setInternalValue(externalValue);
-    }
-  }, []);
-
-  const isDefault = !internalValue;
-  const isError = internalValue && validation && errorMessage && !validation(internalValue);
-  const isFocus = inputRef.current?.isFocused();
+  const [internalValue, setInternalValue] = useState<string>(defaultValue || value || '');
+  const [inputState, setInputState] = useState<'default' | 'error' | 'primary'>('default');
 
   useImperativeHandle(ref, () => ({
-    focus: () => inputRef.current?.focus(),
-    blur: () => inputRef.current?.blur(),
+    focus: () => {
+      inputRef.current?.focus();
+      setInputState('primary');
+    },
+    blur: () => {
+      inputRef.current?.blur();
+      setInputState(() => {
+        if (validation !== undefined) {
+          if (!validation(internalValue)) {
+            return 'error';
+          }
+        }
+        return 'default';
+      });
+    },
     clear: () => {
       inputRef.current?.clear();
       setInternalValue('');
+      setInputState(() => {
+        if (validation !== undefined) {
+          if (!validation('')) {
+            return 'error';
+          }
+        }
+        return 'default';
+      });
     },
     get value() {
       return internalValue;
@@ -58,22 +71,35 @@ const TextInputComponent: ForwardRefRenderFunction<TextInputRef, TextInputProps>
         <S.TextInputContainer full={full} labelPosition={labelPosition}>
           <S.TextInput
             ref={inputRef}
-            {...TextInputProps}
+            {...rest}
             condition={(() => {
-              if (isError) return 'error';
-              if (isFocus) return 'primary';
-              if (isDefault) return 'default';
+              if (inputState === 'error') return 'error';
+              if (inputState === 'primary') return 'primary';
+              if (inputState === 'default') return 'default';
               return 'default';
             })()}
-            value={internalValue}
+            defaultValue={defaultValue || value}
             onChangeText={(text: string) => {
               setInternalValue(text);
-              onChange?.(text);
+              if (onChange !== undefined) onChange(text);
+              if (validation !== undefined) {
+                if (!validation(text)) {
+                  setInputState('error');
+                } else {
+                  setInputState('primary');
+                }
+              }
+            }}
+            onBlur={e => {
+              if (ref && typeof ref !== 'function') {
+                ref.current?.blur();
+              }
+              rest.onBlur?.(e);
             }}
           />
         </S.TextInputContainer>
       </S.TextInputWrapper>
-      {isError && (
+      {inputState === 'error' && (
         <S.ErrorContainer>
           <S.ErrorText style={errorStyle}>{errorMessage}</S.ErrorText>
         </S.ErrorContainer>

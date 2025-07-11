@@ -88,21 +88,20 @@ const S = {
 
     padding-horizontal: 8px;
 
-    ${({condition, theme}) => {
+    ${({condition, theme, readOnly}) => {
+      const readOnlyCss = readOnly ? `cursor: not-allowed; color: ${theme.colors.darkDisabled};` : '';
       switch (condition) {
         case 'default':
-          return `border-color: ${theme.colors.dark}; outline-color: ${theme.colors.dark};`;
+          const color = readOnly ? theme.colors.darkDisabled : theme.colors.dark;
+          return `border-color: ${color}; outline-color: ${color}; ${readOnlyCss}`;
         case 'error':
-          return `border-color: ${theme.colors.error}; outline-color: ${theme.colors.error};`;
+          const errorColor = readOnly ? theme.colors.errorDisabled : theme.colors.error;
+          return `border-color: ${errorColor}; outline-color: ${errorColor}; ${readOnlyCss}`;
         case 'primary':
-          return `border-color: ${theme.colors.primary}; outline-color: ${theme.colors.primary};`;
+          const primaryColor = readOnly ? theme.colors.primaryDisabled : theme.colors.primary;
+          return `border-color: ${primaryColor}; outline-color: ${primaryColor}; ${readOnlyCss}`;
       }
     }}
-
-    :readonly {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
   `,
 
   ErrorContainer: styled.View`

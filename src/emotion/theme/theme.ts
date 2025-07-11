@@ -34,9 +34,15 @@ const theme = {
 
     // disabled
     disabled: 'rgba(174, 174, 174, 1)',
+    disabledHover: 'rgba(174, 174, 174, 0.08)',
+    disabledPressed: 'rgba(174, 174, 174, 0.18)',
+    disabledDisabled: 'rgba(174, 174, 174, 0.38)',
 
     // dark
     dark: 'rgba(29, 38, 58, 1)',
+    darkHover: 'rgba(29, 38, 58, 0.08)',
+    darkPressed: 'rgba(29, 38, 58, 0.18)',
+    darkDisabled: 'rgba(29, 38, 58, 0.38)',
   },
   fonts: {
     h1: {

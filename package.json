@@ -1,6 +1,6 @@
 {
   "name": "@ummgoban/shared",
-  "version": "0.0.4-canary.12",
+  "version": "0.0.4-canary.16",
   "description": "ummgoban 공통 패키지",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -59,8 +59,6 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "peerDependencies": {
-    "@emotion/native": ">=11.11.0",
-    "@emotion/react": ">=11.14.0",
     "axios": ">=1.7.4",
     "react": ">=18.0.0",
     "react-native": ">=0.79.0"

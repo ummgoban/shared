@@ -21,7 +21,6 @@ const TextInputComponent: ForwardRefRenderFunction<TextInputRef, TextInputProps>
     defaultValue = '',
     value,
     full = false,
-    onChange,
     ...rest
   },
   ref,
@@ -79,9 +78,8 @@ const TextInputComponent: ForwardRefRenderFunction<TextInputRef, TextInputProps>
               return 'default';
             })()}
             defaultValue={defaultValue || value}
-            onChangeText={(text: string) => {
+            onChangeText={text => {
               setInternalValue(text);
-              if (onChange !== undefined) onChange(text);
               if (validation !== undefined) {
                 if (!validation(text)) {
                   setInputState('error');
@@ -89,6 +87,7 @@ const TextInputComponent: ForwardRefRenderFunction<TextInputRef, TextInputProps>
                   setInputState('primary');
                 }
               }
+              rest.onChangeText?.(text);
             }}
             onBlur={e => {
               if (ref && typeof ref !== 'function') {

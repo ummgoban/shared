@@ -13,7 +13,7 @@ const S = {
 
     transition: background-color opacity 0.3s ease-in-out;
 
-    ${({themeColor, theme}) => {
+    ${({themeColor}) => {
       const defaultColorStyle = [`background-color: ${theme.colors[themeColor]};`];
 
       if (themeColor.startsWith('secondary')) {

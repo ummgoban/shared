@@ -2858,8 +2858,6 @@ __metadata:
     vite: ^6.3.5
     vitest: ^3.1.4
   peerDependencies:
-    "@emotion/native": ">=11.11.0"
-    "@emotion/react": ">=11.14.0"
     axios: ">=1.7.4"
     react: ">=18.0.0"
     react-native: ">=0.79.0"

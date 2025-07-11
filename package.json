@@ -1,6 +1,6 @@
 {
   "name": "@ummgoban/shared",
-  "version": "0.0.3",
+  "version": "0.0.4-canary.12",
   "description": "ummgoban 공통 패키지",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -19,6 +19,12 @@
     },
     "./react": {
       "types": "./dist/react/index.d.ts"
+    },
+    "./react-native": {
+      "types": "./dist/react-native/index.d.ts"
+    },
+    "./emotion": {
+      "types": "./dist/emotion/index.d.ts"
     }
   },
   "files": [
@@ -37,7 +43,10 @@
     "format": "prettier --write src",
     "format:check": "prettier --check src",
     "test:all": "yarn lint:check && yarn format:check && yarn type-check && yarn test",
-    "release": "standard-version"
+    "release": "standard-version",
+    "publish:local": "yarn run build && ./.script/publish-local.sh",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "repository": {
     "type": "git",
@@ -50,15 +59,31 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "peerDependencies": {
+    "@emotion/native": ">=11.11.0",
+    "@emotion/react": ">=11.14.0",
     "axios": ">=1.7.4",
-    "react": ">=18.0.0"
+    "react": ">=18.0.0",
+    "react-native": ">=0.79.0"
   },
   "devDependencies": {
+    "@emotion/native": "^11.11.0",
+    "@emotion/react": "^11.14.0",
     "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-commonjs": "^28.0.0",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-typescript": "^12.0.0",
+    "@storybook/addon-docs": "^9.0.5",
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/addon-interactions": "^8.6.14",
+    "@storybook/addon-links": "^9.0.5",
+    "@storybook/addon-onboarding": "^9.0.5",
+    "@storybook/addon-react-native-web": "^0.0.29",
+    "@storybook/blocks": "^8.6.14",
+    "@storybook/react": "^9.0.5",
+    "@storybook/react-native": "^9.0.6",
+    "@storybook/react-vite": "^9.0.5",
+    "@storybook/react-webpack5": "^9.0.5",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -77,13 +102,17 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-no-relative-import-paths": "^1.5.5",
     "eslint-plugin-prettier": "^5.4.1",
+    "eslint-plugin-storybook": "^9.0.5",
     "jiti": "^2.4.2",
     "jsdom": "^26.1.0",
     "prettier": "^3.5.3",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-native": "^0.79.3",
+    "react-native-web": "^0.20.0",
     "rollup": "^4.41.1",
     "standard-version": "^9.5.0",
+    "storybook": "^9.0.5",
     "tslib": "^2.8.1",
     "typescript": "^5.0.0",
     "vite": "^6.3.5",

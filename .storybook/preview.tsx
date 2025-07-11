@@ -1,5 +1,8 @@
 import type {Preview} from '@storybook/react-vite';
 
+import {EmotionProvider} from '@/react/provider';
+import {theme} from '@/emotion/theme';
+
 const preview: Preview = {
   parameters: {
     controls: {
@@ -12,6 +15,13 @@ const preview: Preview = {
       // React Native 옵션 설정
     },
   },
+  decorators: [
+    Story => (
+      <EmotionProvider theme={theme}>
+        <Story />
+      </EmotionProvider>
+    ),
+  ],
 };
 
 export default preview;

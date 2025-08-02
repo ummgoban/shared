@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/ummgoban/shared/compare/v0.0.4...v0.0.5) (2025-08-02)
+
+
+### ✨ 새로운 기능
+
+* market 타입을 공용으로 사용하는 멤버만 유지 ([#19](https://github.com/ummgoban/shared/issues/19)) ([9120af9](https://github.com/ummgoban/shared/commit/9120af956d474f7adf4cedf33566cffe0d97d57f))
+
 ### [0.0.4](https://github.com/ummgoban/shared/compare/v0.0.3...v0.0.4) (2025-07-11)
 
 

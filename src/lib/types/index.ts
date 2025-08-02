@@ -18,3 +18,6 @@ export * from './session.type';
 
 // storage
 export * from './storage.type';
+
+// weekday
+export * from './weekday.type';

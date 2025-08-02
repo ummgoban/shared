@@ -6,5 +6,3 @@ export const OAUTH_PROVIDER: Record<SessionType['OAuthProvider'], string> = {
   APPLE: '애플',
   BASIC: '일반회원',
 };
-
-export const convertOAuthProviderToKorean = (provider: SessionType['OAuthProvider']) => OAUTH_PROVIDER[provider];

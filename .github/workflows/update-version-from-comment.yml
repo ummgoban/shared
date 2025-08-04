@@ -107,17 +107,8 @@ jobs:
         if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
         run: yarn install
 
-      # package.json 버전 업데이트
-      - name: Update package.json version
-        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
-        run: |
-          # package.json 버전 업데이트
-          VERSION="${{ steps.check-branch-and-version.outputs.VERSION }}"
-          yarn version --new-version $VERSION --no-git-tag-version
-          echo "package.json 버전을 $VERSION으로 업데이트했습니다."
-
-      # yarn release 실행
-      - name: Run yarn release
+      # 버전 업데이트
+      - name: Update version
         if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
         run: |
           # standard-version 실행 (--release-as 옵션으로 버전 지정)

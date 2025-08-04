@@ -37,7 +37,7 @@ jobs:
           # @docs comment format
           #
           # /version
-          # @description 
+          # @description
           #   - version:x.y.z 형식
           # @pattern
           #   - /version:[x.y.z]+(-[\w\.]+)?
@@ -52,25 +52,25 @@ jobs:
           # /version:nightly # nightly 버전으로 업데이트 [x].[y].[z]-nightly.[yyyyMMDD].[6-letter-commitHash]
           # ```
           # /skip
-          # @description 
+          # @description
           #   - 해당 버전 스킵 후 pull request close
           #   - 수동으로 pull request close와 같은 기능 수행
           # /reopen
-          # @description 
+          # @description
           #   - pull request 재개
 
 
           # 특정 버전으로 업데이트
           if [[ "$COMMENT" =~ ^/version:([0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?) ]]; then
-            COMMENT_TYPE="version"
             VERSION="${BASH_REMATCH[1]}"
             echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+            echo "COMMENT_TYPE=version" >> $GITHUB_OUTPUT
             echo "추출된 버전: $VERSION"
           # 키워드로 버전 업데이트
-          elif [[ "$COMMENT" =~ ^/version:([patch|minor|major|nightly|beta|alpha|rc]) ]]; then
-            COMMENT_TYPE="version"
+          elif [[ "$COMMENT" =~ ^/version:(patch|minor|major|nightly|beta|alpha|rc) ]]; then
             VERSION="${BASH_REMATCH[1]}"
             echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+            echo "COMMENT_TYPE=version" >> $GITHUB_OUTPUT
             echo "추출된 버전 업데이트 타입: $VERSION"
           # skip 커멘드
           elif [[ "$COMMENT" =~ ^/skip ]]; then
@@ -118,6 +118,8 @@ jobs:
       # close pull request
       - name: 'Skip PR (comment: /skip)'
         if: steps.extract-version.outputs.COMMENT_TYPE == 'skip'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           gh pr close ${{ github.event.issue.number }}
           exit 0
@@ -125,12 +127,16 @@ jobs:
       # reopen pull request
       - name: 'Reopen PR (comment: /reopen)'
         if: steps.extract-version.outputs.COMMENT_TYPE == 'reopen'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           gh pr reopen ${{ github.event.issue.number }}
           exit 0
 
+      # 이후 동작은 COMMENT_TYPE이 version인 경우에만 실행
       # Node.js 설정
       - name: Setup Node.js
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
@@ -139,11 +145,13 @@ jobs:
 
       # Yarn 설정
       - name: Setup Yarn
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
         run: |
           npm install -g corepack@latest
           corepack enable
 
       - name: Setup Node.js 20.x for yarn
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
@@ -151,11 +159,13 @@ jobs:
 
       # 캐쉬 가져오기
       - name: Get yarn cache directory path
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
 
       # yarn 캐쉬 저장
       - name: Cache yarn dependencies
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
         uses: actions/cache@v3
         with:
           path: |
@@ -169,11 +179,13 @@ jobs:
 
       # 의존성 설치 (cache가 있으면 사용)
       - name: Install dependencies
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
         run: |
           yarn install --immutable
 
       # 버전 업데이트
       - name: Update version
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
         run: |
           # checkout auto-changelog-update branch
           git config --global user.name "GitHub Actions Bot"
@@ -184,11 +196,13 @@ jobs:
           git checkout auto-changelog-update
           echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
 
+          UPDATE_VERSION=${{steps.extract-version.outputs.VERSION}}
+
           # 최근 커밋 revert 하기
           git revert HEAD --no-commit
 
-          # nightly 버전 업데이트 
-          if [[ "${{ steps.extract-version.outputs.VERSION }}" == "nightly" ]]; then
+          # nightly 버전 업데이트
+          if [[ "$UPDATE_VERSION" == "nightly" ]]; then
             # 이전 버전 [x].[y].[z] 추출
             VERSION=$(node -p "require('./package.json').version")
             VERSION=$(echo $VERSION | cut -d '-' -f 1)
@@ -204,12 +218,10 @@ jobs:
             echo "date: $DATE"
 
             # nightly 버전으로 업데이트
-            NIGHTLY_VERSION="${VERSION}-nightly.${DATE}.${HASH}"
-            echo "nightly version: $NIGHTLY_VERSION"
-
-            yarn release --release-as $NIGHTLY_VERSION --skip.tag
+            UPDATE_VERSION="${VERSION}-nightly.${DATE}.${HASH}"
+            echo "nightly version: $UPDATE_VERSION"
           # alpha, beta, rc 버전 업데이트
-          elif [[ "${{ steps.extract-version.outputs.VERSION }}" == "alpha" || "${{ steps.extract-version.outputs.VERSION }}" == "beta" || "${{ steps.extract-version.outputs.VERSION }}" == "rc" ]]; then
+          elif [[ "$UPDATE_VERSION" == "alpha" || "$UPDATE_VERSION" == "beta" || "$UPDATE_VERSION" == "rc" ]]; then
             # 이전 버전 [x].[y].[z] 추출
             VERSION=$(node -p "require('./package.json').version")
 
@@ -222,23 +234,30 @@ jobs:
             echo "version type: $VERSION_TYPE ($VERSION_TYPE_NUMBER)"
 
             # 이전 버전과 steps.extract-version.outputs.VERSION의 타입이 같은 경우 [type].[n]을 n+1로 수정
-            if [[ "${{ steps.extract-version.outputs.VERSION }}" == "$VERSION_TYPE" ]]; then
+            if [[ "$UPDATE_VERSION" == "$VERSION_TYPE" ]]; then
               VERSION_TYPE_NUMBER=$(($VERSION_TYPE_NUMBER + 1))
               UPDATE_VERSION="${VERSION_XYZ}-${VERSION_TYPE}.${VERSION_TYPE_NUMBER}"
             # 그렇지 않은 경우 [type].0 으로 버전 업데이트
             else
               UPDATE_VERSION="${VERSION_XYZ}-${VERSION_TYPE}.0"
             fi
-
-            yarn release --release-as $UPDATE_VERSION --skip.tag
           else
-            yarn release --release-as ${{ steps.extract-version.outputs.VERSION }} --skip.tag
+            echo "Update version: $UPDATE_VERSION"
           fi
+
+          yarn release --release-as $UPDATE_VERSION --skip.tag
 
           git push origin auto-changelog-update
 
+          # pull request 이름 변경
+          gh api \
+            repos/${{ github.repository }}/pulls/${{ github.event.issue.number }} \
+            -X PATCH \
+            -f title="release: v${UPDATE_VERSION}"
+
       # 완료 코멘트
       - name: Comment on completion
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
         uses: peter-evans/create-or-update-comment@v3
         with:
           issue-number: ${{ github.event.issue.number }}
@@ -246,9 +265,3 @@ jobs:
             @${{ github.event.comment.user.login }} 버전 업데이트가 완료되었습니다! ✅
 
             버전: ${{ steps.extract-version.outputs.VERSION }}
-
-            \* pull request 이름을 변경해주세요
-
-            ```bash
-            release: v${{ steps.extract-version.outputs.VERSION }}
-            ```

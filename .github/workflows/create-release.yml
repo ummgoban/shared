@@ -142,6 +142,9 @@ jobs:
 
       - name: Publish
         if: env.all_pass == 'true'
-        run: yarn npm publish --no-git-checks --access public
+        run: |
+          sh .script/pre-install.sh
+          yarn npm publish --no-git-checks --access public
+          sh .script/post-install.sh
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

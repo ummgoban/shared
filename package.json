@@ -31,7 +31,6 @@
     "dist"
   ],
   "scripts": {
-    "ci": "./.script/ci.sh",
     "build": "rm -rf dist && rollup -c",
     "test": "vitest run",
     "test:watch": "vitest watch",
@@ -44,7 +43,7 @@
     "format:check": "prettier --check src",
     "test:all": "yarn lint:check && yarn format:check && yarn type-check && yarn test",
     "release": "standard-version",
-    "publish:local": "yarn run build && ./.script/publish-local.sh",
+    "publish:local": "sh ./.script/publish-local.sh",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -114,6 +113,6 @@
   },
   "packageManager": "yarn@3.6.4",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://registry.npmjs.org/"
   }
 }

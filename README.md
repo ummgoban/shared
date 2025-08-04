@@ -20,13 +20,6 @@ yarn add @ummgoban/shared
 
 # dev
 
-## create .env
-
-```txt
-# .env
-NPM_TOKEN=ghp_...
-```
-
 ## test
 
 ```bash
@@ -58,7 +51,7 @@ yarn format
 ## 수동 배포
 
 1. `package.json`의 버전을 증가시킵니다. (`v[x].[y].[z]` 또는 `v[x].[y].[z]-[alpha|candy|rc].[n]`)
-2. `yarn build` 후 `yarn npm publish`를 실행합니다.
+2. `yarn build` 후 `yarn publish:local`를 실행합니다.
 
 ## 자동 배포
 

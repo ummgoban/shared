@@ -238,7 +238,8 @@ jobs:
       # 변경사항 커밋 및 푸시
       - name: Commit and push changes
         run: |
-          git add .
+          git add package.json yarn.lock CHANGELOG.md
+          git status
           git commit -m "chore(release): 버전 ${{ steps.extract-version.outputs.VERSION }}로 업데이트"
           git push origin ${{ steps.extract-version.outputs.HEAD_REF }}
 

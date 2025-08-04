@@ -189,6 +189,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          # 최근 태그 확인 후 로컬 및 원격 태그 삭제
+          LATEST_TAG=$(git tag | sort -V | tail -n 1)
+          if [ ! -z "$LATEST_TAG" ]; then
+            echo "최근 태그 삭제: $LATEST_TAG"
+            git tag -d $LATEST_TAG
+            git push --delete origin $LATEST_TAG || echo "원격 태그가 없거나 삭제 권한이 없습니다."
+          fi
+
           # checkout auto-changelog-update branch
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -247,7 +255,7 @@ jobs:
             echo "Update version: $UPDATE_VERSION"
           fi
 
-          yarn release --release-as $UPDATE_VERSION --skip.tag
+          yarn release --release-as $UPDATE_VERSION
 
           git push origin auto-changelog-update
 

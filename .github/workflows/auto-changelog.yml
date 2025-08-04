@@ -52,7 +52,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Generate changelog and bump version
-        run: yarn release --skip.commit --skip.tag
+        run: yarn release --skip.commit
 
       - name: Get new version
         id: get-version

@@ -135,6 +135,8 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           # 현재 브랜치 정보 확인
+          git checkout ${{ steps.extract-version.outputs.HEAD_REF }}
+          git fetch origin
           echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
 
       # Node.js 설정

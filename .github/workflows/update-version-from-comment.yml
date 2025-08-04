@@ -186,6 +186,8 @@ jobs:
       # 버전 업데이트
       - name: Update version
         if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           # checkout auto-changelog-update branch
           git config --global user.name "GitHub Actions Bot"

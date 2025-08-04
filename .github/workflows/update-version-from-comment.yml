@@ -3,6 +3,8 @@ name: Update Version From Comment
 on:
   issue_comment:
     types: [created]
+  pull_request:
+    branches: [auto-changelog-update]
 
 permissions:
   contents: write
@@ -18,35 +20,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get PR details
-        id: pr-details
-        uses: octokit/request-action@v2.x
-        with:
-          route: GET /repos/{owner}/{repo}/pulls/{pull_number}
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
-          pull_number: ${{ github.event.issue.number }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Check branch name and extract version from comment
-        id: check-branch-and-version
+      - name: Extract version from comment
+        id: extract-version
         run: |
-          HEAD_REF="${{ fromJson(steps.pr-details.outputs.data).head.ref }}"
-          echo "HEAD_REF=$HEAD_REF" >> $GITHUB_OUTPUT
-
-          # auto-changelog-update 브랜치인지 확인
-          if [[ "$HEAD_REF" == "auto-changelog-update" ]]; then
-            echo "IS_TARGET_BRANCH=true" >> $GITHUB_OUTPUT
-          else
-            echo "IS_TARGET_BRANCH=false" >> $GITHUB_OUTPUT
-            echo "브랜치가 auto-changelog-update가 아닙니다: $HEAD_REF"
-            exit 0
-          fi
-
           COMMENT=$(echo "${{ github.event.comment.body }}" | xargs)
 
           # 코멘트에서 버전 추출
@@ -109,7 +88,7 @@ jobs:
           fi
 
       - name: Comment Invalid Version
-        if: steps.check-branch-and-version.outputs.COMMENT_TYPE == 'invalid'
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'invalid'
         uses: peter-evans/create-or-update-comment@v3
         with:
           issue-number: ${{ github.event.issue.number }}
@@ -119,20 +98,20 @@ jobs:
             본문에서 명령어를 확인해주세요.
 
       - name: Add reaction to comment (:-1)
-        if: steps.check-branch-and-version.outputs.COMMENT_TYPE == 'invalid'
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'invalid'
         uses: peter-evans/create-or-update-comment@v3
         with:
           comment-id: ${{ github.event.comment.id }}
           reactions: '-1'
 
       - name: Finish Action (invalid comment)
-        if: steps.check-branch-and-version.outputs.COMMENT_TYPE == 'invalid'
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'invalid'
         run: |
           echo "Invalid comment."
           exit 0
 
       - name: Add reaction to comment (:+1)
-        if: steps.check-branch-and-version.outputs.COMMENT_TYPE != 'invalid'
+        if: steps.extract-version.outputs.COMMENT_TYPE != 'invalid'
         uses: peter-evans/create-or-update-comment@v3
         with:
           comment-id: ${{ github.event.comment.id }}
@@ -140,31 +119,30 @@ jobs:
 
       # close pull request
       - name: 'Skip PR (comment: /skip)'
-        if: steps.check-branch-and-version.outputs.COMMENT_TYPE == 'skip'
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'skip'
         run: |
           gh pr close ${{ github.event.issue.number }}
           exit 0
 
       # reopen pull request
       - name: 'Reopen PR (comment: /reopen)'
-        if: steps.check-branch-and-version.outputs.COMMENT_TYPE == 'reopen'
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'reopen'
         run: |
           gh pr reopen ${{ github.event.issue.number }}
           exit 0
 
-      # auto-changelog-update 브랜치 체크아웃
-      - name: Checkout PR branch
-        if: steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+      - name: Setting git config
+        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         run: |
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           git fetch origin
-          git checkout ${{ steps.check-branch-and-version.outputs.HEAD_REF }}
+          git checkout ${{ steps.extract-version.outputs.HEAD_REF }}
 
       # Node.js 설정
       - name: Setup Node.js
-        if: steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
@@ -173,20 +151,20 @@ jobs:
 
       # Yarn 설정
       - name: Setup Yarn
-        if: steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         run: |
           npm install -g corepack@latest
           corepack enable
 
       # 캐쉬 가져오기
       - name: Get yarn cache directory path
-        if: steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
 
       # yarn 캐쉬 저장
       - name: Cache yarn dependencies
-        if: steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         uses: actions/cache@v3
         with:
           path: |
@@ -200,19 +178,19 @@ jobs:
 
       # 의존성 설치 (cache가 있으면 사용)
       - name: Install dependencies
-        if: steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         run: |
           yarn install --immutable
 
       # 버전 업데이트
       - name: Update version
-        if: steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         run: |
           # 최근 커밋 revert 하기
           git revert HEAD --no-commit
 
           # nightly 버전 업데이트 
-          if [[ "${{ steps.check-branch-and-version.outputs.VERSION }}" == "nightly" ]]; then
+          if [[ "${{ steps.extract-version.outputs.VERSION }}" == "nightly" ]]; then
             # 이전 버전 [x].[y].[z] 추출
             VERSION=$(node -p "require('./package.json').version")
             VERSION=$(echo $VERSION | cut -d '-' -f 1)
@@ -233,7 +211,7 @@ jobs:
 
             yarn release --release-as $NIGHTLY_VERSION --skip.tag
           # alpha, beta, rc 버전 업데이트
-          elif [[ "${{ steps.check-branch-and-version.outputs.VERSION }}" == "alpha" || "${{ steps.check-branch-and-version.outputs.VERSION }}" == "beta" || "${{ steps.check-branch-and-version.outputs.VERSION }}" == "rc" ]]; then
+          elif [[ "${{ steps.extract-version.outputs.VERSION }}" == "alpha" || "${{ steps.extract-version.outputs.VERSION }}" == "beta" || "${{ steps.extract-version.outputs.VERSION }}" == "rc" ]]; then
             # 이전 버전 [x].[y].[z] 추출
             VERSION=$(node -p "require('./package.json').version")
 
@@ -245,8 +223,8 @@ jobs:
             VERSION_TYPE=$(echo $VERSION_TYPE_RAW | cut -d '.' -f 1)
             echo "version type: $VERSION_TYPE ($VERSION_TYPE_NUMBER)"
 
-            # 이전 버전과 steps.check-branch-and-version.outputs.VERSION의 타입이 같은 경우 [type].[n]을 n+1로 수정
-            if [[ "${{ steps.check-branch-and-version.outputs.VERSION }}" == "$VERSION_TYPE" ]]; then
+            # 이전 버전과 steps.extract-version.outputs.VERSION의 타입이 같은 경우 [type].[n]을 n+1로 수정
+            if [[ "${{ steps.extract-version.outputs.VERSION }}" == "$VERSION_TYPE" ]]; then
               VERSION_TYPE_NUMBER=$(($VERSION_TYPE_NUMBER + 1))
               UPDATE_VERSION="${VERSION_XYZ}-${VERSION_TYPE}.${VERSION_TYPE_NUMBER}"
             # 그렇지 않은 경우 [type].0 으로 버전 업데이트
@@ -256,31 +234,31 @@ jobs:
 
             yarn release --release-as $UPDATE_VERSION --skip.tag
           else
-            yarn release --release-as ${{ steps.check-branch-and-version.outputs.VERSION }} --skip.tag
+            yarn release --release-as ${{ steps.extract-version.outputs.VERSION }} --skip.tag
           fi
           echo "yarn release가 완료되었습니다."
 
       # 변경사항 커밋 및 푸시
       - name: Commit and push changes
-        if: steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         run: |
           git add .
-          git commit -m "chore(release): 버전 ${{ steps.check-branch-and-version.outputs.VERSION }}로 업데이트"
-          git push origin ${{ steps.check-branch-and-version.outputs.HEAD_REF }}
+          git commit -m "chore(release): 버전 ${{ steps.extract-version.outputs.VERSION }}로 업데이트"
+          git push origin ${{ steps.extract-version.outputs.HEAD_REF }}
 
       # 완료 코멘트
       - name: Comment on completion
-        if: steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         uses: peter-evans/create-or-update-comment@v3
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
             @${{ github.event.comment.user.login }} 버전 업데이트가 완료되었습니다! ✅
 
-            버전: ${{ steps.check-branch-and-version.outputs.VERSION }}
+            버전: ${{ steps.extract-version.outputs.VERSION }}
 
             \* pull request 이름을 변경해주세요
 
             ```bash
-            release: v${{ steps.check-branch-and-version.outputs.VERSION }}
+            release: v${{ steps.extract-version.outputs.VERSION }}
             ```

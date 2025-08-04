@@ -1,10 +1,23 @@
 name: Check
 
 on:
-  pull_request:
-    branches:
-      - '*'
+  push:
+    branches: ['*']
+    paths:
+      - '**/*.ts'
+      - '**/*.tsx'
+      - '**/*.spec.ts'
+      - '**/*.spec.tsx'
+      - 'yarn.lock'
 
+  pull_request:
+    branches: ['*']
+    paths:
+      - '**/*.ts'
+      - '**/*.tsx'
+      - '**/*.spec.ts'
+      - '**/*.spec.tsx'
+      - 'yarn.lock'
 jobs:
   check:
     runs-on: ubuntu-latest

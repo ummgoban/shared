@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   changelog:
-    if: "github.event.pull_request.merged == true && !startsWith(github.event.pull_request.title, 'release: v')"
+    if: "github.event.pull_request.merged == true && !startsWith(github.event.pull_request.title, 'release: v') && !startsWith(github.event.pull_request.title, 'chore(deps):')"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

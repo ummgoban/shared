@@ -235,10 +235,6 @@ jobs:
             yarn release --release-as ${{ steps.extract-version.outputs.VERSION }} --skip.tag
           fi
 
-          # commit and push
-          git add package.json yarn.lock CHANGELOG.md
-          git status
-          git commit -m "chore(release): 버전 ${{ steps.extract-version.outputs.VERSION }}로 업데이트"
           git push origin auto-changelog-update
 
       # 완료 코멘트

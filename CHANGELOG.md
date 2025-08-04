@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.5-nightly.20250804.ec22fc (2025-08-04)
+
+
+### 🐛 버그 수정
+
+* make narrow openHour type ([#26](https://github.com/ummgoban/shared/issues/26)) ([80bdd6a](https://github.com/ummgoban/shared/commit/80bdd6a88b35118db8ebf0879b45d37a44f4148c))
+
 ### [0.0.5](https://github.com/ummgoban/shared/compare/v0.0.4...v0.0.5) (2025-08-02)
 
 

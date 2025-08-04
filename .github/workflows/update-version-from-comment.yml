@@ -49,29 +49,106 @@ jobs:
 
           # 코멘트에서 버전 추출
           # "/"로 시작하는 댓글만 명령어로 인식
-          # (version:x.y.z 형식)
+          # valid comment format
+          # /version
+          # @description 
+          #   - version:x.y.z 형식
+          # @pattern
+          #   - /version:[x.y.z]+(-[\w\.]+)?
+          #   - /version:[patch|minor|major|nightly|beta|alpha|rc]
+          # @example
+          # ```
+          # /version:1.0.0
+          # /version:1.0.0-alpha.1
+          # /version:patch
+          # /version:minor
+          # /version:major
+          # /version:nightly # nightly 버전으로 업데이트 [x].[y].[z]-nightly.[yyyyMMDD].[6-letter-commitHash]
+          # ```
+          # /skip
+          # @description 
+          #   - 해당 버전 스킵 후 pull request close
+          #   - 수동으로 pull request close와 같은 기능 수행
+          # /reopen
+          # @description 
+          #   - pull request 재개
+
           COMMENT="${{ github.event.comment.body }}"
+          # 특정 버전으로 업데이트
           if [[ "$COMMENT" =~ ^/version:([0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?) ]]; then
+            COMMENT_TYPE="version"
             VERSION="${BASH_REMATCH[1]}"
             echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
             echo "HAS_VERSION=true" >> $GITHUB_OUTPUT
             echo "추출된 버전: $VERSION"
+          # 키워드로 버전 업데이트
+          elif [[ "$COMMENT" =~ ^/version:([patch|minor|major|nightly|beta|alpha|rc]) ]]; then
+            COMMENT_TYPE="version"
+            VERSION="${BASH_REMATCH[1]}"
+            echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+            echo "HAS_VERSION=true" >> $GITHUB_OUTPUT
+            echo "추출된 버전 업데이트 타입: $VERSION"
+          # skip 커멘드
+          elif [[ "$COMMENT" =~ ^/skip ]]; then
+            echo "COMMENT_TYPE=skip" >> $GITHUB_OUTPUT
+            echo "버전 스킵"
+          # reopen 커멘드
+          elif [[ "$COMMENT" =~ ^/reopen ]]; then
+            echo "COMMENT_TYPE=reopen" >> $GITHUB_OUTPUT
+            echo "pull request 재개"
           else
-            echo "HAS_VERSION=false" >> $GITHUB_OUTPUT
-            echo "코멘트에서 버전을 찾을 수 없습니다."
+            echo "COMMENT_TYPE=invalid" >> $GITHUB_OUTPUT
+            echo "잘못된 코멘트입니다."
           fi
 
-      - name: Add reaction to comment
-        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+      - name: Comment Invalid Version
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            @${{ github.event.comment.user.login }} 코멘트를 확인할 수 없습니다.
+
+            본문에서 명령어를 확인해주세요.
+
+      - name: Add reaction to comment (:-1)
+        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.COMMENT_TYPE == 'invalid'
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reactions: '-1'
+
+      - name: Finish Action (invalid comment)
+        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.COMMENT_TYPE == 'invalid'
+        run: |
+          echo "Invalid comment."
+          exit 0
+
+      - name: Add reaction to comment (:+1)
+        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.COMMENT_TYPE != 'invalid'
         uses: peter-evans/create-or-update-comment@v3
         with:
           comment-id: ${{ github.event.comment.id }}
           reactions: '+1'
 
+      # close pull request
+      - name: 'Skip PR (comment: /skip)'
+        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.COMMENT_TYPE == 'skip'
+        run: |
+          gh pr close ${{ github.event.issue.number }}
+
+      # reopen pull request
+      - name: 'Reopen PR (comment: /reopen)'
+        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.COMMENT_TYPE == 'reopen'
+        run: |
+          gh pr reopen ${{ github.event.issue.number }}
+
       # auto-changelog-update 브랜치 체크아웃
       - name: Checkout PR branch
         if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
         run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
           git fetch origin
           git checkout ${{ steps.check-branch-and-version.outputs.HEAD_REF }}
 
@@ -79,12 +156,7 @@ jobs:
       - name: Undo last commit
         if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
         run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
           # 최근 커밋 되돌리기 (hard reset)
-          git reset --hard HEAD~1
-          echo "최근 커밋을 되돌렸습니다."
 
       # Node.js 설정
       - name: Setup Node.js
@@ -111,8 +183,56 @@ jobs:
       - name: Update version
         if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
         run: |
-          # standard-version 실행 (--release-as 옵션으로 버전 지정)
-          yarn release --release-as ${{ steps.check-branch-and-version.outputs.VERSION }} --skip.tag
+          # 최근 커밋 revert 하기
+          git revert HEAD --no-commit
+
+          # nightly 버전 업데이트 
+          if [[ "${{ steps.check-branch-and-version.outputs.VERSION }}" == "nightly" ]]; then
+            # 이전 버전 [x].[y].[z] 추출
+            VERSION=$(node -p "require('./package.json').version")
+            VERSION=$(echo $VERSION | cut -d '-' -f 1)
+            echo "previous version: $VERSION"
+
+            # hash 추출
+            HASH=$(git rev-parse HEAD)
+            HASH=$(echo $HASH | cut -c 1-6)
+            echo "hash: $HASH"
+
+            # 날짜 추출
+            DATE=$(date +%Y%m%d)
+            echo "date: $DATE"
+
+            # nightly 버전으로 업데이트
+            NIGHTLY_VERSION="${VERSION}-nightly.${DATE}.${HASH}"
+            echo "nightly version: $NIGHTLY_VERSION"
+
+            yarn release --release-as $NIGHTLY_VERSION --skip.tag
+          # alpha, beta, rc 버전 업데이트
+          elif [[ "${{ steps.check-branch-and-version.outputs.VERSION }}" == "alpha" || "${{ steps.check-branch-and-version.outputs.VERSION }}" == "beta" || "${{ steps.check-branch-and-version.outputs.VERSION }}" == "rc" ]]; then
+            # 이전 버전 [x].[y].[z] 추출
+            VERSION=$(node -p "require('./package.json').version")
+
+            VERSION_XYZ=$(echo $VERSION | cut -d '-' -f 1)
+            echo "previous version: $VERSION_XYZ"
+
+            VERSION_TYPE_RAW=$(echo $VERSION | cut -d '-' -f 2)
+            VERSION_TYPE_NUMBER=$(echo $VERSION_TYPE_RAW | cut -d '.' -f 2)
+            VERSION_TYPE=$(echo $VERSION_TYPE_RAW | cut -d '.' -f 1)
+            echo "version type: $VERSION_TYPE ($VERSION_TYPE_NUMBER)"
+
+            # 이전 버전과 steps.check-branch-and-version.outputs.VERSION의 타입이 같은 경우 [type].[n]을 n+1로 수정
+            if [[ "${{ steps.check-branch-and-version.outputs.VERSION }}" == "$VERSION_TYPE" ]]; then
+              VERSION_TYPE_NUMBER=$(($VERSION_TYPE_NUMBER + 1))
+              UPDATE_VERSION="${VERSION_XYZ}-${VERSION_TYPE}.${VERSION_TYPE_NUMBER}"
+            # 그렇지 않은 경우 [type].0 으로 버전 업데이트
+            else
+              UPDATE_VERSION="${VERSION_XYZ}-${VERSION_TYPE}.0"
+            fi
+
+            yarn release --release-as $UPDATE_VERSION --skip.tag
+          else
+            yarn release --release-as ${{ steps.check-branch-and-version.outputs.VERSION }} --skip.tag
+          fi
           echo "yarn release가 완료되었습니다."
 
       # 변경사항 커밋 및 푸시
@@ -133,3 +253,5 @@ jobs:
             @${{ github.event.comment.user.login }} 버전 업데이트가 완료되었습니다! ✅
 
             버전: ${{ steps.check-branch-and-version.outputs.VERSION }}
+
+            \* pull request 이름을 변경해주세요: release: v${{ steps.check-branch-and-version.outputs.VERSION }}

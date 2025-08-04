@@ -28,8 +28,10 @@ jobs:
       - name: Extract version from PR title
         id: extract-version
         run: |
-          PR_TITLE="${{ github.event.pull_request.title }}"
-          VERSION=$(echo $PR_TITLE | sed -n 's/release: v\(.*\)/\1/p')
+          # package.json에서 버전 추출
+          VERSION=$(node -p "require('./package.json').version")
+          echo "current version: $VERSION"
+
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "Extracted version: $VERSION"
 

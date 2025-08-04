@@ -76,22 +76,61 @@ jobs:
                 <h2>명령어</h2>
                 pull request에 댓글로 명령어를 입력할 수 있습니다.
               </summary>
+              <details>
+                <summary><h3>버전 업데이트 (`/version:[command]`)</h3></summary>
 
-              <h3>버전 업데이트</h3>
+                ```bash
+                /version:[x].[y].[z]+(-[\w\.]+)?
+                /version:[patch|minor|major|nightly|beta|alpha|rc]
+                ```
+                **예시**
+                ```bash
+                /version:1.0.0
+                ```
+                ```bash
+                /version:1.0.0-alpha.1
+                ```
+                ```bash
+                /version:1.0.0-nightly.250804.abcdef
+                ```
+                ```bash
+                /version:patch
+                ```
+                ```bash
+                /version:minor
+                ```
+                ```bash
+                /version:major
+                ```
+                ```bash
+                /version:nightly
+                ```
+                ```bash
+                /version:beta
+                ```
+                ```bash
+                /version:alpha
+                ```
+                ```bash
+                /version:rc
+                ```
+              </details>
 
-              ```bash
-              /version:[x].[y].[z]+(-[\w\.]+)?
-              ```
-              **예시**
-              ```bash
-              /version:1.0.0
-              ```
-              ```bash
-              /version:1.0.0-alpha.1
-              ```
-              ```bash
-              /version:1.0.0-nightly.250804.abcdef
-              ```
+              <details>
+                <summary><h3>버전 스킵 (`/skip`)</h3></summary>
+
+                ```bash
+                /skip
+                ```
+              </details>
+
+              <details>
+                <summary><h3>pull request 재개 (`/reopen`)</h3></summary>
+
+                ```bash
+                /reopen
+                ```
+              </details>
             </details>
           branch: auto-changelog-update
           base: main

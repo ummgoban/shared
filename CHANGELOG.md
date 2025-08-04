@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [](https://github.com/ummgoban/shared/compare/v0.0.5...v) (2025-08-04)
+## [1.0.0-alpha.2](https://github.com/ummgoban/shared/compare/v0.0.5...v1.0.0-alpha.2) (2025-08-04)
 
 
 ### 🔨 기타 변경사항
@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file. See [standa
 * npm에 직접 배포 ([#21](https://github.com/ummgoban/shared/issues/21)) ([15394c3](https://github.com/ummgoban/shared/commit/15394c33af3795ba1519bb7795421c252665ea73))
 * pull request comment action ([#23](https://github.com/ummgoban/shared/issues/23)) ([0fd5f6b](https://github.com/ummgoban/shared/commit/0fd5f6b0b2dab46c2cf95fa649a82cec1dc05e21))
 
-## [0.1.0](https://github.com/ummgoban/shared/compare/v0.0.5...v0.1.0) (2025-08-04)
+## [1.0.0-alpha.1](https://github.com/ummgoban/shared/compare/v0.0.5...v1.0.0-alpha.1) (2025-08-04)
 
 
 ### 🔨 기타 변경사항

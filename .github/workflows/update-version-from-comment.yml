@@ -82,8 +82,8 @@ jobs:
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # 최근 커밋 되돌리기 (soft reset)
-          git reset --soft HEAD~1
+          # 최근 커밋 되돌리기 (hard reset)
+          git reset --hard HEAD~1
           echo "최근 커밋을 되돌렸습니다."
 
       # Node.js 설정
@@ -121,7 +121,7 @@ jobs:
         run: |
           git add .
           git commit -m "chore(release): 버전 ${{ steps.check-branch-and-version.outputs.VERSION }}로 업데이트"
-          git push origin ${{ steps.check-branch-and-version.outputs.HEAD_REF }}
+          git push --force origin ${{ steps.check-branch-and-version.outputs.HEAD_REF }}
 
       # 완료 코멘트
       - name: Comment on completion

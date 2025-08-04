@@ -3,6 +3,8 @@ name: Update Version From Comment
 on:
   issue_comment:
     types: [created]
+  pull_request:
+    branches: [auto-changelog-update]
 
 permissions:
   contents: write
@@ -11,84 +13,130 @@ permissions:
 
 jobs:
   update-version:
-    # PR 코멘트인 경우에만 실행
-    if: ${{ github.event.issue.pull_request }}
+    # PR 코멘트이고 auto-changelog-update 브랜치인 경우에만 실행
+    if: ${{ github.event.issue.pull_request }} && ${{ github.event.pull_request.head.ref == 'auto-changelog-update' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get PR details
-        id: pr-details
-        uses: octokit/request-action@v2.x
-        with:
-          route: GET /repos/{owner}/{repo}/pulls/{pull_number}
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
-          pull_number: ${{ github.event.issue.number }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Check branch name and extract version from comment
-        id: check-branch-and-version
+      - name: Extract version from comment
+        id: extract-version
         run: |
-          HEAD_REF="${{ fromJson(steps.pr-details.outputs.data).head.ref }}"
-          echo "HEAD_REF=$HEAD_REF" >> $GITHUB_OUTPUT
+          COMMENT=$(echo "${{ github.event.comment.body }}" | xargs)
 
-          # auto-changelog-update 브랜치인지 확인
-          if [[ "$HEAD_REF" == "auto-changelog-update" ]]; then
-            echo "IS_TARGET_BRANCH=true" >> $GITHUB_OUTPUT
-          else
-            echo "IS_TARGET_BRANCH=false" >> $GITHUB_OUTPUT
-            echo "브랜치가 auto-changelog-update가 아닙니다: $HEAD_REF"
+          # "/"로 시작하는 댓글만 명령어로 인식
+          if [[ "$COMMENT" != /* ]]; then
+            echo "Is not a command."
             exit 0
           fi
 
-          # 코멘트에서 버전 추출
-          # "/"로 시작하는 댓글만 명령어로 인식
-          # (version:x.y.z 형식)
-          COMMENT="${{ github.event.comment.body }}"
+          # @docs comment format
+          #
+          # /version
+          # @description
+          #   - version:x.y.z 형식
+          # @pattern
+          #   - /version:[x.y.z]+(-[\w\.]+)?
+          #   - /version:[patch|minor|major|nightly|beta|alpha|rc]
+          # @example
+          # ```
+          # /version:1.0.0
+          # /version:1.0.0-alpha.1
+          # /version:patch
+          # /version:minor
+          # /version:major
+          # /version:nightly # nightly 버전으로 업데이트 [x].[y].[z]-nightly.[yyyyMMDD].[6-letter-commitHash]
+          # ```
+          # /skip
+          # @description
+          #   - 해당 버전 스킵 후 pull request close
+          #   - 수동으로 pull request close와 같은 기능 수행
+          # /reopen
+          # @description
+          #   - pull request 재개
+
+
+          # 특정 버전으로 업데이트
           if [[ "$COMMENT" =~ ^/version:([0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?) ]]; then
             VERSION="${BASH_REMATCH[1]}"
             echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-            echo "HAS_VERSION=true" >> $GITHUB_OUTPUT
+            echo "COMMENT_TYPE=version" >> $GITHUB_OUTPUT
             echo "추출된 버전: $VERSION"
+          # 키워드로 버전 업데이트
+          elif [[ "$COMMENT" =~ ^/version:(patch|minor|major|nightly|beta|alpha|rc) ]]; then
+            VERSION="${BASH_REMATCH[1]}"
+            echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+            echo "COMMENT_TYPE=version" >> $GITHUB_OUTPUT
+            echo "추출된 버전 업데이트 타입: $VERSION"
+          # skip 커멘드
+          elif [[ "$COMMENT" =~ ^/skip ]]; then
+            echo "COMMENT_TYPE=skip" >> $GITHUB_OUTPUT
+            echo "버전 스킵"
+          # reopen 커멘드
+          elif [[ "$COMMENT" =~ ^/reopen ]]; then
+            echo "COMMENT_TYPE=reopen" >> $GITHUB_OUTPUT
+            echo "pull request 재개"
           else
-            echo "HAS_VERSION=false" >> $GITHUB_OUTPUT
-            echo "코멘트에서 버전을 찾을 수 없습니다."
+            echo "COMMENT_TYPE=invalid" >> $GITHUB_OUTPUT
+            echo "잘못된 코멘트입니다."
           fi
 
-      - name: Add reaction to comment
-        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+      - name: Comment Invalid Version
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'invalid'
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            @${{ github.event.comment.user.login }} 코멘트를 확인할 수 없습니다.
+
+            본문에서 명령어를 확인해주세요.
+
+      - name: Add reaction to comment (:-1)
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'invalid'
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reactions: '-1'
+
+      - name: Finish Action (invalid comment)
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'invalid'
+        run: |
+          echo "Invalid comment."
+          exit 0
+
+      - name: Add reaction to comment (:+1)
+        if: steps.extract-version.outputs.COMMENT_TYPE != 'invalid'
         uses: peter-evans/create-or-update-comment@v3
         with:
           comment-id: ${{ github.event.comment.id }}
           reactions: '+1'
 
-      # auto-changelog-update 브랜치 체크아웃
-      - name: Checkout PR branch
-        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+      # close pull request
+      - name: 'Skip PR (comment: /skip)'
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'skip'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git fetch origin
-          git checkout ${{ steps.check-branch-and-version.outputs.HEAD_REF }}
+          gh pr close ${{ github.event.issue.number }}
+          exit 0
 
-      # 최근 커밋 되돌리기
-      - name: Undo last commit
-        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+      # reopen pull request
+      - name: 'Reopen PR (comment: /reopen)'
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'reopen'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          gh pr reopen ${{ github.event.issue.number }}
+          exit 0
 
-          # 최근 커밋 되돌리기 (soft reset)
-          git reset --soft HEAD~1
-          echo "최근 커밋을 되돌렸습니다."
-
+      # 이후 동작은 COMMENT_TYPE이 version인 경우에만 실행
       # Node.js 설정
       - name: Setup Node.js
-        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
@@ -97,48 +145,123 @@ jobs:
 
       # Yarn 설정
       - name: Setup Yarn
-        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
         run: |
           npm install -g corepack@latest
           corepack enable
 
-      # 의존성 설치
+      - name: Setup Node.js 20.x for yarn
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: yarn
+
+      # 캐쉬 가져오기
+      - name: Get yarn cache directory path
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+
+      # yarn 캐쉬 저장
+      - name: Cache yarn dependencies
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            **/node_modules
+            .yarn/cache
+            .yarn/unplugged
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      # 의존성 설치 (cache가 있으면 사용)
       - name: Install dependencies
-        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
-        run: yarn install
-
-      # package.json 버전 업데이트
-      - name: Update package.json version
-        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
         run: |
-          # package.json 버전 업데이트
-          VERSION="${{ steps.check-branch-and-version.outputs.VERSION }}"
-          yarn version --new-version $VERSION --no-git-tag-version
-          echo "package.json 버전을 $VERSION으로 업데이트했습니다."
+          yarn install --immutable
 
-      # yarn release 실행
-      - name: Run yarn release
-        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+      # 버전 업데이트
+      - name: Update version
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
         run: |
-          # standard-version 실행 (--release-as 옵션으로 버전 지정)
-          yarn release --release-as ${{ steps.check-branch-and-version.outputs.VERSION }} --skip.tag
-          echo "yarn release가 완료되었습니다."
+          # checkout auto-changelog-update branch
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      # 변경사항 커밋 및 푸시
-      - name: Commit and push changes
-        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
-        run: |
-          git add .
-          git commit -m "chore(release): 버전 ${{ steps.check-branch-and-version.outputs.VERSION }}로 업데이트"
-          git push origin ${{ steps.check-branch-and-version.outputs.HEAD_REF }}
+          # auto-changelog-update 브랜치로 checkout
+          git fetch origin
+          git checkout auto-changelog-update
+          echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
+
+          UPDATE_VERSION=${{steps.extract-version.outputs.VERSION}}
+
+          # 최근 커밋 revert 하기
+          git revert HEAD --no-commit
+
+          # nightly 버전 업데이트
+          if [[ "$UPDATE_VERSION" == "nightly" ]]; then
+            # 이전 버전 [x].[y].[z] 추출
+            VERSION=$(node -p "require('./package.json').version")
+            VERSION=$(echo $VERSION | cut -d '-' -f 1)
+            echo "previous version: $VERSION"
+
+            # hash 추출
+            HASH=$(git rev-parse HEAD)
+            HASH=$(echo $HASH | cut -c 1-6)
+            echo "hash: $HASH"
+
+            # 날짜 추출
+            DATE=$(date +%Y%m%d)
+            echo "date: $DATE"
+
+            # nightly 버전으로 업데이트
+            UPDATE_VERSION="${VERSION}-nightly.${DATE}.${HASH}"
+            echo "nightly version: $UPDATE_VERSION"
+          # alpha, beta, rc 버전 업데이트
+          elif [[ "$UPDATE_VERSION" == "alpha" || "$UPDATE_VERSION" == "beta" || "$UPDATE_VERSION" == "rc" ]]; then
+            # 이전 버전 [x].[y].[z] 추출
+            VERSION=$(node -p "require('./package.json').version")
+
+            VERSION_XYZ=$(echo $VERSION | cut -d '-' -f 1)
+            echo "previous version: $VERSION_XYZ"
+
+            VERSION_TYPE_RAW=$(echo $VERSION | cut -d '-' -f 2)
+            VERSION_TYPE_NUMBER=$(echo $VERSION_TYPE_RAW | cut -d '.' -f 2)
+            VERSION_TYPE=$(echo $VERSION_TYPE_RAW | cut -d '.' -f 1)
+            echo "version type: $VERSION_TYPE ($VERSION_TYPE_NUMBER)"
+
+            # 이전 버전과 steps.extract-version.outputs.VERSION의 타입이 같은 경우 [type].[n]을 n+1로 수정
+            if [[ "$UPDATE_VERSION" == "$VERSION_TYPE" ]]; then
+              VERSION_TYPE_NUMBER=$(($VERSION_TYPE_NUMBER + 1))
+              UPDATE_VERSION="${VERSION_XYZ}-${VERSION_TYPE}.${VERSION_TYPE_NUMBER}"
+            # 그렇지 않은 경우 [type].0 으로 버전 업데이트
+            else
+              UPDATE_VERSION="${VERSION_XYZ}-${VERSION_TYPE}.0"
+            fi
+          else
+            echo "Update version: $UPDATE_VERSION"
+          fi
+
+          yarn release --release-as $UPDATE_VERSION --skip.tag
+
+          git push origin auto-changelog-update
+
+          # pull request 이름 변경
+          gh api \
+            repos/${{ github.repository }}/pulls/${{ github.event.issue.number }} \
+            -X PATCH \
+            -f title="release: v${UPDATE_VERSION}"
 
       # 완료 코멘트
       - name: Comment on completion
-        if: steps.check-branch-and-version.outputs.IS_TARGET_BRANCH == 'true' && steps.check-branch-and-version.outputs.HAS_VERSION == 'true'
+        if: steps.extract-version.outputs.COMMENT_TYPE == 'version'
         uses: peter-evans/create-or-update-comment@v3
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
             @${{ github.event.comment.user.login }} 버전 업데이트가 완료되었습니다! ✅
 
-            버전: ${{ steps.check-branch-and-version.outputs.VERSION }}
+            버전: ${{ steps.extract-version.outputs.VERSION }}

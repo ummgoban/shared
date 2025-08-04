@@ -6,10 +6,10 @@ import {Weekday} from './weekday.type';
  */
 export type OpenHour = {
   dayOfWeek: Weekday;
-  /** 영업 시작 시간 */
-  openTime: Date | string | null;
-  /** 영업 종료 시간 */
-  closeTime: Date | string | null;
+  /** 영업 시작 시간 HH:mm */
+  openTime: string;
+  /** 영업 종료 시간 HH:mm */
+  closeTime: string;
 };
 
 export type MarketType = {

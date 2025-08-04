@@ -20,7 +20,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract version from comment
@@ -65,14 +65,12 @@ jobs:
             COMMENT_TYPE="version"
             VERSION="${BASH_REMATCH[1]}"
             echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-            echo "HAS_VERSION=true" >> $GITHUB_OUTPUT
             echo "추출된 버전: $VERSION"
           # 키워드로 버전 업데이트
           elif [[ "$COMMENT" =~ ^/version:([patch|minor|major|nightly|beta|alpha|rc]) ]]; then
             COMMENT_TYPE="version"
             VERSION="${BASH_REMATCH[1]}"
             echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-            echo "HAS_VERSION=true" >> $GITHUB_OUTPUT
             echo "추출된 버전 업데이트 타입: $VERSION"
           # skip 커멘드
           elif [[ "$COMMENT" =~ ^/skip ]]; then
@@ -132,17 +130,12 @@ jobs:
           exit 0
 
       - name: Setting git config
-        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         run: |
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          git fetch origin
-          git checkout ${{ steps.extract-version.outputs.HEAD_REF }}
-
       # Node.js 설정
       - name: Setup Node.js
-        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
@@ -151,20 +144,23 @@ jobs:
 
       # Yarn 설정
       - name: Setup Yarn
-        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         run: |
           npm install -g corepack@latest
           corepack enable
 
+      - name: Setup Node.js 20.x for yarn
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: yarn
+
       # 캐쉬 가져오기
       - name: Get yarn cache directory path
-        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
 
       # yarn 캐쉬 저장
       - name: Cache yarn dependencies
-        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         uses: actions/cache@v3
         with:
           path: |
@@ -178,13 +174,11 @@ jobs:
 
       # 의존성 설치 (cache가 있으면 사용)
       - name: Install dependencies
-        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         run: |
           yarn install --immutable
 
       # 버전 업데이트
       - name: Update version
-        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         run: |
           # 최근 커밋 revert 하기
           git revert HEAD --no-commit
@@ -240,7 +234,6 @@ jobs:
 
       # 변경사항 커밋 및 푸시
       - name: Commit and push changes
-        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         run: |
           git add .
           git commit -m "chore(release): 버전 ${{ steps.extract-version.outputs.VERSION }}로 업데이트"
@@ -248,7 +241,6 @@ jobs:
 
       # 완료 코멘트
       - name: Comment on completion
-        if: steps.extract-version.outputs.HAS_VERSION == 'true'
         uses: peter-evans/create-or-update-comment@v3
         with:
           issue-number: ${{ github.event.issue.number }}

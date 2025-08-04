@@ -129,16 +129,6 @@ jobs:
           gh pr reopen ${{ github.event.issue.number }}
           exit 0
 
-      - name: Setting git config
-        run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          # auto-changelog-update 브랜치로 checkout
-          git fetch origin
-          git checkout auto-changelog-update
-          echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
-
       # Node.js 설정
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -185,6 +175,15 @@ jobs:
       # 버전 업데이트
       - name: Update version
         run: |
+          # checkout auto-changelog-update branch
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # auto-changelog-update 브랜치로 checkout
+          git fetch origin
+          git checkout auto-changelog-update
+          echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
+
           # 최근 커밋 revert 하기
           git revert HEAD --no-commit
 
@@ -235,15 +234,12 @@ jobs:
           else
             yarn release --release-as ${{ steps.extract-version.outputs.VERSION }} --skip.tag
           fi
-          echo "yarn release가 완료되었습니다."
 
-      # 변경사항 커밋 및 푸시
-      - name: Commit and push changes
-        run: |
+          # commit and push
           git add package.json yarn.lock CHANGELOG.md
           git status
           git commit -m "chore(release): 버전 ${{ steps.extract-version.outputs.VERSION }}로 업데이트"
-          git push origin ${{ steps.extract-version.outputs.HEAD_REF }}
+          git push origin auto-changelog-update
 
       # 완료 코멘트
       - name: Comment on completion

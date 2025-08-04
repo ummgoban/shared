@@ -1,6 +1,6 @@
 {
   "name": "@ummgoban/shared",
-  "version": "0.0.5",
+  "version": "0.0.5-250804.0",
   "description": "ummgoban 공통 패키지",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -54,10 +54,6 @@
   },
   "author": "ummgoban",
   "license": "MIT",
-  "packageManager": "yarn@3.6.4",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "peerDependencies": {
     "axios": ">=1.7.4",
     "react": ">=18.0.0",
@@ -115,5 +111,9 @@
     "typescript": "^5.0.0",
     "vite": "^6.3.5",
     "vitest": "^3.1.4"
+  },
+  "packageManager": "yarn@3.6.4",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   }
 }

@@ -60,6 +60,37 @@ yarn format
 3. github action이 실행되면 `release: v[x].[y].[z]`로 pull request 가 생성됩니다.
 4. `release: v[x].[y].[z]` pull request가 머지되면 release tag가 생성되고 publish가 실행됩니다.
 
+## 버전 업데이트
+
+### 버전 업데이트 커멘드
+
+auto-changelog-update 브랜치에 pull request를 생성하면 github action이 실행됩니다.
+pull request에 댓글로 버전 업데이트 커멘드를 입력할 수 있습니다.
+
+```bash
+# 특정 버전으로 업데이트
+/version:1.0.0
+/version:1.0.0-alpha.1
+
+# 키워드로 버전 업데이트
+/version:patch
+/version:minor
+/version:major
+/version:nightly # nightly 버전으로 업데이트 [x].[y].[z]-nightly.[yyyyMMDD].[7-letter-commitHash]
+```
+
+### 버전 스킵
+
+```bash
+/skip
+```
+
+### pull request 재개
+
+```bash
+/reopen
+```
+
 # ummgoban productions
 
 - apps

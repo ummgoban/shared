@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6-nightly.20250808.a3cf0f6](https://github.com/ummgoban/shared/compare/v0.0.6-nightly.20250808.2fb39ff...0.0.6-nightly.20250808.a3cf0f6) (2025-08-08)
+
+
+### 🔨 기타 변경사항
+
+* 린트, 타입, 포멧 체크 액션 공통화 ([#48](https://github.com/ummgoban/shared/issues/48)) ([4c3c720](https://github.com/ummgoban/shared/commit/4c3c720ccba5bcf17361b13ff2aa95fba6c89f7a))
+
+
+### 🐛 버그 수정
+
+* split product statuts type ([#50](https://github.com/ummgoban/shared/issues/50)) ([4cd5333](https://github.com/ummgoban/shared/commit/4cd53337ae0ddd10906da56c7ebccafd4b30773b))
+
 ### [0.0.6-nightly.20250808.2fb39ff](https://github.com/ummgoban/shared/compare/v0.0.6-nightly.20250808.f18a523...0.0.6-nightly.20250808.2fb39ff) (2025-08-08)
 
 

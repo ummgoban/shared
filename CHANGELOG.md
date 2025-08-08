@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.6-nightly.20250808.08af2a4 (2025-08-08)
+
+
+### 🔨 기타 변경사항
+
+* revert changelog ([#38](https://github.com/ummgoban/shared/issues/38)) ([24ea7ab](https://github.com/ummgoban/shared/commit/24ea7ab646bce138fa1810ed68e6388ae242e0cd))
+
 ### [0.0.6](https://github.com/ummgoban/shared/compare/v0.0.5...v0.0.6) (2025-08-08)
 
 

@@ -35,23 +35,12 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "Extracted version: $VERSION"
 
-      - name: Create and push tag
-        run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          TAG_NAME="v${{ steps.extract-version.outputs.VERSION }}"
-          echo "Creating tag: $TAG_NAME"
-
-          git tag -a $TAG_NAME -m "Release $TAG_NAME"
-          git push origin $TAG_NAME
-
       - name: Read CHANGELOG
         id: changelog
         run: |
           # CHANGELOG.md에서 현재 버전의 변경 사항을 추출
           VERSION="${{ steps.extract-version.outputs.VERSION }}"
-          CHANGELOG_CONTENT=$(sed -n "/## \[${VERSION}\]/,/## \[/p" CHANGELOG.md | sed '$d')
+          CHANGELOG_CONTENT=$(sed -n "/### \[${VERSION}\]/,/### \[/p" CHANGELOG.md | sed '$d')
 
           echo "CHANGELOG_CONTENT<<EOF" >> $GITHUB_OUTPUT
           echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
@@ -145,8 +134,7 @@ jobs:
       - name: Publish
         if: env.all_pass == 'true'
         run: |
-          sh .script/pre-install.sh
-          yarn npm publish --no-git-checks --access public
-          sh .script/post-install.sh
+          # publish
+          yarn npm publish --access=public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

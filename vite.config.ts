@@ -7,6 +7,6 @@ export default defineConfig({
     alias: {
       'react-native': 'react-native-web',
     },
-    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
 });

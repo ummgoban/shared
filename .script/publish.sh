@@ -5,6 +5,6 @@
 
 sh .script/pre-install.sh
 
-yarn npm publish --access=public --no-git-checks
+yarn npm publish --access=public
 
 sh .script/post-install.sh

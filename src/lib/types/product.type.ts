@@ -1,3 +1,5 @@
+export type ProductStatusType = 'IN_STOCK' | 'OUT_OF_STOCK' | 'HIDDEN';
+
 export type ProductType = {
   id: number;
   name: string;
@@ -6,7 +8,7 @@ export type ProductType = {
   discountPrice: number;
   discountRate: number;
   tags: TagType[];
-  productStatus: 'IN_STOCK' | 'OUT_OF_STOCK' | 'HIDDEN';
+  productStatus: ProductStatusType;
   stock: number;
   count?: number;
 };

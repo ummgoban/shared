@@ -79,7 +79,7 @@ jobs:
 
       - name: Run common checks
         id: pass
-        uses: ./.github/actions/pass.yml
+        uses: ./.github/actions/pass
 
       - name: Publish
         if: steps.pass.outputs.all_pass == 'true'

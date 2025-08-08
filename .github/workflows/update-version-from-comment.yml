@@ -220,7 +220,7 @@ jobs:
 
             # hash 추출
             HASH=$(git rev-parse HEAD)
-            HASH=$(echo $HASH | cut -c 1-6)
+            HASH=$(echo $HASH | cut -c 1-7)
             echo "hash: $HASH"
 
             # 날짜 추출

@@ -53,7 +53,7 @@ jobs:
 
       - name: Generate changelog and bump version
         run: |
-          yarn release --skip.commit
+          yarn release
 
       - name: Get new version
         id: get-version

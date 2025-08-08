@@ -260,6 +260,10 @@ jobs:
 
           yarn release --release-as $UPDATE_VERSION
 
+          # tag push
+          git push --follow-tags origin auto-changelog-update
+
+          # auto-changelog-update 브랜치 push
           git push origin auto-changelog-update
 
           # pull request 이름 변경

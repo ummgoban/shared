@@ -6,6 +6,14 @@ on:
     branches:
       - main
 
+  workflow_dispatch:
+    branches:
+      - main
+    inputs:
+      version:
+        required: true
+        type: string
+
 permissions:
   contents: write
   pull-requests: write
@@ -16,7 +24,7 @@ concurrency:
 
 jobs:
   changelog:
-    if: "github.event.pull_request.merged == true && !startsWith(github.event.pull_request.title, 'release: v') && !startsWith(github.event.pull_request.title, 'chore(deps):')"
+    if: "(github.event.pull_request.merged == true && !startsWith(github.event.pull_request.title, 'release: v') && !startsWith(github.event.pull_request.title, 'chore(deps):')) || github.event.workflow_dispatch.inputs.version != ''"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -52,7 +60,12 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Generate changelog and bump version
-        run: yarn release --skip.commit
+        run: |
+          if [ "${{ github.event.inputs.version }}" == "" ]; then
+            yarn release --skip.commit
+          else
+            yarn release --skip.commit --release-as ${{ github.event.inputs.version }}
+          fi
 
       - name: Get new version
         id: get-version

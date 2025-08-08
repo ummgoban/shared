@@ -77,73 +77,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20.x for corepack
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          registry-url: 'https://registry.npmjs.org/'
-          scope: '@ummgoban'
-
-      - name: Enable Corepack and Set yarn Version
-        run: |
-          npm install -g corepack@latest
-          corepack enable
-
-      - name: Setup Node.js 20.x for yarn
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          cache: yarn
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Lint
-        id: lint_check
-        continue-on-error: true
-        run: |
-          yarn lint:check
-          echo $? > lint_result
-
-      - name: Format
-        id: format_check
-        continue-on-error: true
-        run: |
-          yarn format:check
-          echo $? > format_result
-
-      - name: Type Check
-        id: type_check
-        continue-on-error: true
-        run: |
-          yarn type-check
-          echo $? > type_result
-
-      - name: Test
-        id: test_check
-        continue-on-error: true
-        run: |
-          yarn test
-          echo $? > test_result
-
-      - name: Build
-        id: build
-        continue-on-error: true
-        run: |
-          yarn build
-          echo $? > build_result
-
-      - name: Check Lint & Format & Type Check & Test & Build Results
-        id: check_results
-        run: |
-          if [ "$(cat lint_result)" -eq 0 ] && [ "$(cat format_result)" -eq 0 ] && [ "$(cat type_result)" -eq 0 ] && [ "$(cat test_result)" -eq 0 ] && [ "$(cat build_result)" -eq 0 ]; then
-            echo "all_pass=true" >> $GITHUB_ENV
-          else
-            echo "all_pass=false" >> $GITHUB_ENV
-          fi
+      - name: Run common checks
+        id: pass
+        uses: ./.github/actions/pass.yml
 
       - name: Publish
-        if: env.all_pass == 'true'
+        if: steps.pass.outputs.all_pass == 'true'
         run: |
           # create .env
           echo "NPM_TOKEN=${{ secrets.NPM_TOKEN }}" > .env

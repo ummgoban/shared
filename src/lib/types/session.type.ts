@@ -1,3 +1,5 @@
+import {OAuthProviderType} from './ouath-provider.type';
+
 export type SessionType = {
   accessToken: string;
   refreshToken?: string;
@@ -9,5 +11,5 @@ export type SessionType = {
    * @description refreshToken 만료 시간 (Oauth 로그인 시)
    */
   refreshTokenExpiresAt?: number;
-  OAuthProvider: 'NAVER' | 'KAKAO' | 'APPLE' | 'BASIC';
+  OAuthProvider: OAuthProviderType;
 };

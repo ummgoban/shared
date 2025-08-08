@@ -20,34 +20,9 @@ class ApiClient {
 
   private sessionOptions: ApiClientOptions['sessionOptions'];
 
-  private async expiredSession() {
-    await this.sessionOptions.setStorage('session', {});
-    this._jwt = null;
-    const expiredError = new CustomError({
-      errorCode: 401,
-      errorMessage: '세션이 만료되어 로그아웃되었습니다.',
-    });
-    throw expiredError;
-  }
-
-  private async setAuthorizationHeader(config: InternalAxiosRequestConfig): Promise<void> {
-    const session: SessionType | null = await this.sessionOptions.getStorage('session');
-    this._jwt = session?.accessToken ?? null;
-
-    if (!this._jwt) {
-      return;
-    }
-
-    // accessToken이 있으면 Authorization 헤더에 추가
-    if (this._jwt) {
-      config.headers.Authorization = `Bearer ${this._jwt}`;
-    } else {
-      config.headers.Authorization = null;
-    }
-  }
-
   private constructor({serverApiBaseUrl, sessionOptions}: ApiClientOptions) {
     this.sessionOptions = sessionOptions;
+
     this.axiosInstance = axios.create({
       baseURL: serverApiBaseUrl,
       headers: {
@@ -105,6 +80,32 @@ class ApiClient {
         return Promise.reject(error);
       },
     );
+  }
+
+  private async expiredSession() {
+    await this.sessionOptions.setStorage('session', {});
+    this._jwt = null;
+    const expiredError = new CustomError({
+      errorCode: 401,
+      errorMessage: '세션이 만료되어 로그아웃되었습니다.',
+    });
+    throw expiredError;
+  }
+
+  private async setAuthorizationHeader(config: InternalAxiosRequestConfig): Promise<void> {
+    const session: SessionType | null = await this.sessionOptions.getStorage('session');
+    this._jwt = session?.accessToken ?? null;
+
+    if (!this._jwt) {
+      return;
+    }
+
+    // accessToken이 있으면 Authorization 헤더에 추가
+    if (this._jwt) {
+      config.headers.Authorization = `Bearer ${this._jwt}`;
+    } else {
+      config.headers.Authorization = null;
+    }
   }
 
   public static getInstance(): ApiClient {

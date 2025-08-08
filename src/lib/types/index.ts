@@ -1,3 +1,7 @@
+//////////////////////////
+//    product domain    //
+//////////////////////////
+
 // product
 export * from './product.type';
 
@@ -16,8 +20,15 @@ export * from './review.type';
 // session
 export * from './session.type';
 
+///////////////////////
+//    common type    //
+///////////////////////
+
 // storage
 export * from './storage.type';
 
 // weekday
 export * from './weekday.type';
+
+// oauth provider
+export * from './ouath-provider.type';

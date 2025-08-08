@@ -51,6 +51,7 @@
     "type": "git",
     "url": "https://github.com/ummgoban/shared.git"
   },
+  "homepage": "https://github.com/ummgoban/shared#readme",
   "author": "ummgoban",
   "license": "MIT",
   "peerDependencies": {

@@ -1,77 +1,114 @@
 import {Market} from './Market.model';
 import {MarketType} from '../types/market.type';
 
+class MockDate extends Date {
+  private mockDay: number;
+  private mockHours: number;
+  private mockMinutes: number;
+
+  constructor(day: number, hours: number, minutes: number) {
+    super();
+    this.mockDay = day;
+    this.mockHours = hours;
+    this.mockMinutes = minutes;
+  }
+
+  getDay(): number {
+    return this.mockDay;
+  }
+
+  getHours(): number {
+    return this.mockHours;
+  }
+
+  getMinutes(): number {
+    return this.mockMinutes;
+  }
+}
+
+const market: Market = new Market({
+  id: 1,
+  name: 'test',
+  openHours: [
+    {
+      dayOfWeek: 'MONDAY',
+      openTime: '09:30',
+      closeTime: '18:00',
+    },
+    {
+      dayOfWeek: 'TUESDAY',
+      openTime: '09:30',
+      closeTime: '18:00',
+    },
+    {
+      dayOfWeek: 'WEDNESDAY',
+      openTime: '09:30',
+      closeTime: '18:00',
+    },
+    {
+      dayOfWeek: 'THURSDAY',
+      openTime: '09:30',
+      closeTime: '18:00',
+    },
+    {
+      dayOfWeek: 'FRIDAY',
+      openTime: '09:30',
+      closeTime: '18:00',
+    },
+    {
+      dayOfWeek: 'SATURDAY',
+      openTime: '09:30',
+      closeTime: '18:00',
+    },
+    {
+      dayOfWeek: 'SUNDAY',
+      openTime: '09:30',
+      closeTime: '18:00',
+    },
+  ],
+  address: 'test',
+  products: [],
+  imageUrls: [],
+  summary: 'test',
+});
+
 describe('Market', () => {
   it('should be defined', () => {
     expect(Market).toBeDefined();
   });
 
-  const market: Market = new Market({
-    id: 1,
-    name: 'test',
-    openHours: [
-      {
-        dayOfWeek: 'MONDAY',
-        openTime: '09:00',
-        closeTime: '18:00',
-      },
-      {
-        dayOfWeek: 'TUESDAY',
-        openTime: '09:00',
-        closeTime: '18:00',
-      },
-      {
-        dayOfWeek: 'WEDNESDAY',
-        openTime: '09:00',
-        closeTime: '18:00',
-      },
-      {
-        dayOfWeek: 'THURSDAY',
-        openTime: '09:00',
-        closeTime: '18:00',
-      },
-      {
-        dayOfWeek: 'FRIDAY',
-        openTime: '09:00',
-        closeTime: '18:00',
-      },
-      {
-        dayOfWeek: 'SATURDAY',
-        openTime: '09:00',
-        closeTime: '18:00',
-      },
-      {
-        dayOfWeek: 'SUNDAY',
-        openTime: '09:00',
-        closeTime: '18:00',
-      },
-    ],
-    address: 'test',
-    products: [],
-    imageUrls: [],
-    summary: 'test',
-  });
-
   it('should isOpen return true when market is open', () => {
-    const mockDate = new Date('2025-08-08T10:00:00.000+09:00');
+    const mockDate = new Date('2025-08-08T09:30:00.000+09:00');
     vitest.spyOn(global, 'Date').mockImplementation(() => mockDate);
 
     expect(market.isOpen()).toBeTruthy();
     vitest.restoreAllMocks();
   });
 
+  it('should isOpen return false when market is open (same open time)', () => {
+    vitest.spyOn(global, 'Date').mockImplementation(() => new MockDate(0, 9, 29));
+
+    expect(market.isOpen()).toBeFalsy();
+    vitest.restoreAllMocks();
+  });
+
+  it('should isOpen return false when market is open (same close time)', () => {
+    vitest.spyOn(global, 'Date').mockImplementation(() => new MockDate(0, 18, 0));
+
+    expect(market.isOpen()).toBeFalsy();
+    vitest.restoreAllMocks();
+  });
+
   it('should isOpen return false when market is closed', () => {
-    const mockDate = new Date('2025-08-08T19:00:00.000+09:00');
-    vitest.spyOn(global, 'Date').mockImplementation(() => mockDate);
+    vitest.spyOn(global, 'Date').mockImplementation(() => new MockDate(0, 19, 0));
 
     expect(market.isOpen()).toBeFalsy();
     vitest.restoreAllMocks();
   });
 
   it('should isOpen return false when market is not open day', () => {
-    // 2050-08-08 금요일
-    const mockDate = new Date('2025-08-08T10:00:00.000+09:00');
-    vitest.spyOn(global, 'Date').mockImplementation(() => mockDate);
+    // 금요일 10시 00분
+    vitest.spyOn(global, 'Date').mockImplementation(() => new MockDate(5, 10, 0));
 
     const closedMarket = new Market({
       id: 1,

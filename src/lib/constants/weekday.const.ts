@@ -17,7 +17,7 @@ export const dayMap: Record<Weekday, string> = {
  * - 상수로 정의된 요일을 enum으로 정의
  * - 날짜간 대소 비교에 사용
  * - `WeekdayEnum["MONDAY"] === 0`
- * 
+ *
  * @example
  * ```ts
  * const mondayString: Weekday = "MONDAY"

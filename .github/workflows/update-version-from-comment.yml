@@ -252,17 +252,8 @@ jobs:
             # 현재 릴리즈 태그 정보 추출
             CURRENT_TAG_LINE=$(sed -n "${FIRST_TAG_LINE}p" CHANGELOG.md)
             
-            # 현재 버전 추출
-            CURRENT_VERSION=$(echo "$CURRENT_TAG_LINE" | grep -o '\[.*\]' | sed 's/\[\(.*\)\]/\1/')
-            echo "현재 버전: $CURRENT_VERSION"
-            
-            # 이전 버전 추출 (compare 부분에서)
-            PREVIOUS_VERSION=$(echo "$CURRENT_TAG_LINE" | grep -o 'compare/v[^\.]*\.[^\.]*\.[^\.]*' | sed 's/compare\/v//')
-            echo "이전 버전: $PREVIOUS_VERSION"
-            
             # 새로운 릴리즈 태그 라인 생성
-            NEW_TAG_LINE="### [${UPDATE_VERSION}](https://github.com/ummgoban/shared/compare/v${PREVIOUS_VERSION}...v${UPDATE_VERSION}) (${TODAY})"
-            echo "새 태그 라인: $NEW_TAG_LINE"
+            NEW_TAG_LINE=$(echo "$CURRENT_TAG_LINE" | sed -E "s/\[[^]]+\]/[${UPDATE_VERSION}]/; s/\.\.\.[^)]*/...${UPDATE_VERSION}/; s/\([0-9]{4}-[0-9]{2}-[0-9]{2}\)/(${TODAY})/")
             
             # 첫 번째 릴리즈 태그 라인 교체
             sed -i.bak "${FIRST_TAG_LINE}s|.*|${NEW_TAG_LINE}|" CHANGELOG.md
@@ -279,7 +270,7 @@ jobs:
 
           git add CHANGELOG.md package.json
           git commit -m "release: v${UPDATE_VERSION}"
-          
+
           git push origin auto-changelog-update
 
           # pull request 이름 변경

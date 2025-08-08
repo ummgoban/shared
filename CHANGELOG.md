@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/ummgoban/shared/compare/v0.0.6-nightly.20250808.db00589...v0.0.6) (2025-08-08)
+
+
+### ✨ 새로운 기능
+
+* Market 모델 도입 ([#42](https://github.com/ummgoban/shared/issues/42)) ([a143c04](https://github.com/ummgoban/shared/commit/a143c04bf1f2c00c5b3162642b383a4873744361))
+
+
+### 🐛 버그 수정
+
+* replace changelog ([#44](https://github.com/ummgoban/shared/issues/44)) ([d3d6605](https://github.com/ummgoban/shared/commit/d3d66056fb1b11e956b397dd5420c5463b5043f2))
+
 ### [0.0.6-nightly.20250808.db00589](https://github.com/ummgoban/shared/compare/v0.0.5...v0.0.6-nightly.20250808.db00589) (2025-08-08)
 
 

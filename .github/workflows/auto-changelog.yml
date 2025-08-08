@@ -61,10 +61,10 @@ jobs:
 
       - name: Generate changelog and bump version
         run: |
-          if [ "${{ github.event.inputs.version }}" == "" ]; then
+          if [ "${{ github.event.workflow_dispatch.inputs.version }}" == "" ]; then
             yarn release --skip.commit
           else
-            yarn release --skip.commit --release-as ${{ github.event.inputs.version }}
+            yarn release --skip.commit --release-as ${{ github.event.workflow_dispatch.inputs.version }}
           fi
 
       - name: Get new version

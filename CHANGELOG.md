@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.0.6](https://github.com/ummgoban/shared/compare/v0.0.6-nightly.20250808.db00589...v0.0.6) (2025-08-08)
+### [0.0.6-nightly.20250808.f18a523](https://github.com/ummgoban/shared/compare/v0.0.6-nightly.20250808.db00589...0.0.6-nightly.20250808.f18a523) (2025-08-08)
 
 
 ### ✨ 새로운 기능

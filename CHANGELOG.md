@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/ummgoban/shared/compare/v0.0.6-nightly.20250808.2fb39ff...v0.0.6) (2025-08-08)
+
+
+### 🔨 기타 변경사항
+
+* 린트, 타입, 포멧 체크 액션 공통화 ([#48](https://github.com/ummgoban/shared/issues/48)) ([4c3c720](https://github.com/ummgoban/shared/commit/4c3c720ccba5bcf17361b13ff2aa95fba6c89f7a))
+
 ### [0.0.6-nightly.20250808.2fb39ff](https://github.com/ummgoban/shared/compare/v0.0.6-nightly.20250808.f18a523...0.0.6-nightly.20250808.2fb39ff) (2025-08-08)
 
 

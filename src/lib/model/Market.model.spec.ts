@@ -78,8 +78,7 @@ describe('Market', () => {
   });
 
   it('should isOpen return true when market is open', () => {
-    const mockDate = new Date('2025-08-08T09:30:00.000+09:00');
-    vitest.spyOn(global, 'Date').mockImplementation(() => mockDate);
+    vitest.spyOn(global, 'Date').mockImplementation(() => new MockDate(0, 9, 30));
 
     expect(market.isOpen()).toBeTruthy();
     vitest.restoreAllMocks();

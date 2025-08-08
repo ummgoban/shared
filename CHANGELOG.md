@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/ummgoban/shared/compare/v0.0.5...v0.0.6) (2025-08-08)
+
+
+### 🐛 버그 수정
+
+* make narrow openHour type ([#26](https://github.com/ummgoban/shared/issues/26)) ([80bdd6a](https://github.com/ummgoban/shared/commit/80bdd6a88b35118db8ebf0879b45d37a44f4148c))
+
+
+### ✨ 새로운 기능
+
+* **lib/constants:** weekday enum ([#30](https://github.com/ummgoban/shared/issues/30)) ([0f5bd48](https://github.com/ummgoban/shared/commit/0f5bd48a3d5262e3272a20fa3bdf618b80a2263f))
+* Oauth type 추가 ([#29](https://github.com/ummgoban/shared/issues/29)) ([a81a51f](https://github.com/ummgoban/shared/commit/a81a51ff4f4bd6dfd2ff829fe9da7de2b63cf771))
+
+
+### 📝 문서 변경
+
+* update readme ([#32](https://github.com/ummgoban/shared/issues/32)) ([9e15e60](https://github.com/ummgoban/shared/commit/9e15e60faf4428acd75421cd129f7b9b6167a22a))
+
+
+### 🔨 기타 변경사항
+
+* auto-changelog with commit ([a9b4876](https://github.com/ummgoban/shared/commit/a9b4876521a4a211860a0a9bfb9c7bcfdf377a3b))
+* **deps:** bump form-data from 4.0.2 to 4.0.4 ([#25](https://github.com/ummgoban/shared/issues/25)) ([39000d9](https://github.com/ummgoban/shared/commit/39000d9ca86295e1c550d944d73f8bee7ebc9d07))
+* discard change for valid changelog ([#34](https://github.com/ummgoban/shared/issues/34)) ([8e69bba](https://github.com/ummgoban/shared/commit/8e69bba9bfdcdde20c1c2033f03005b56ab29bec))
+* fix workflow ([8213c60](https://github.com/ummgoban/shared/commit/8213c6054ebfc557fe5df72a2801d116fcfc8e97))
+* gh-token ([f09709a](https://github.com/ummgoban/shared/commit/f09709ade0e59979ebabd7c7fe0e144b9f5ad528))
+* npm에 직접 배포 ([#21](https://github.com/ummgoban/shared/issues/21)) ([15394c3](https://github.com/ummgoban/shared/commit/15394c33af3795ba1519bb7795421c252665ea73))
+* pull request comment action ([#23](https://github.com/ummgoban/shared/issues/23)) ([0fd5f6b](https://github.com/ummgoban/shared/commit/0fd5f6b0b2dab46c2cf95fa649a82cec1dc05e21))
+* release nightly with hash ([f00a05c](https://github.com/ummgoban/shared/commit/f00a05c595fefb5307717462a937bfcef3da3b09))
+* remove unnessary vite config ([#36](https://github.com/ummgoban/shared/issues/36)) ([dc11db2](https://github.com/ummgoban/shared/commit/dc11db2b975f7fea6311a8fee035b4b7688870b1))
+* tag push ([1fd3135](https://github.com/ummgoban/shared/commit/1fd313528f7043b0aff0279851c9032c4e9a6c49))
+* tag를 생성하고 삭제하기 ([d14dcaa](https://github.com/ummgoban/shared/commit/d14dcaa7490f64cd71fa45eb0fa515a7511ad32f))
+* 릴리즈 워크 플로우 커멘드 생성 ([b52f3b4](https://github.com/ummgoban/shared/commit/b52f3b4b2873cbaf9791835dbe631ab61005c7b1))
+* 수동 트리거 옵션 추가 ([275a3a6](https://github.com/ummgoban/shared/commit/275a3a60a68825502dcf6c909386f50c5a102795))
+
 ### [0.0.5](https://github.com/ummgoban/shared/compare/v0.0.4...v0.0.5) (2025-08-02)
 
 

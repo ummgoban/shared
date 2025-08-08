@@ -268,12 +268,17 @@ jobs:
             sed -i.bak "${FIRST_TAG_LINE}s|.*|${NEW_TAG_LINE}|" CHANGELOG.md
             rm -f CHANGELOG.md.bak
             echo "CHANGELOG.md 파일이 업데이트되었습니다."
+
+            # package.json 버전 업데이트
+            sed -i.bak "s/\(\"version\":\) \".*\"/\1 \"${UPDATE_VERSION}\"/" package.json
+            rm -f package.json.bak
+            echo "package.json 파일이 업데이트되었습니다."
           else
             echo "CHANGELOG.md 파일에서 릴리즈 태그를 찾을 수 없습니다."
           fi
 
-          git add CHANGELOG.md
-          git commit -m "docs: update CHANGELOG.md for v${UPDATE_VERSION}"
+          git add CHANGELOG.md package.json
+          git commit -m "docs: update CHANGELOG.md and package.json for v${UPDATE_VERSION}"
           
           git push origin auto-changelog-update
 

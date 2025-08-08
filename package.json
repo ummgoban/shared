@@ -43,7 +43,7 @@
     "format:check": "prettier --check src",
     "test:all": "yarn lint:check && yarn format:check && yarn type-check && yarn test",
     "release": "standard-version",
-    "publish:local": "sh ./.script/publish-local.sh",
+    "publish": "sh ./.script/publish.sh",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

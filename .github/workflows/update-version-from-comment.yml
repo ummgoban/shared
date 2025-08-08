@@ -189,14 +189,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # 최근 태그 확인 후 로컬 및 원격 태그 삭제
-          LATEST_TAG=$(git tag | sort -V | tail -n 1)
-          if [ ! -z "$LATEST_TAG" ]; then
-            echo "최근 태그 삭제: $LATEST_TAG"
-            git tag -d $LATEST_TAG
-            git push --delete origin $LATEST_TAG || echo "원격 태그가 없거나 삭제 권한이 없습니다."
-          fi
-
           # checkout auto-changelog-update branch
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -207,12 +199,6 @@ jobs:
           echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
 
           UPDATE_VERSION=${{steps.extract-version.outputs.VERSION}}
-
-          # 최근 커밋 revert 하기
-          git revert HEAD --no-commit
-
-          # discard changes
-          git reset --hard
 
           # nightly 버전 업데이트
           if [[ "$UPDATE_VERSION" == "nightly" ]]; then
@@ -258,8 +244,42 @@ jobs:
             echo "Update version: $UPDATE_VERSION"
           fi
 
-          yarn release --release-as $UPDATE_VERSION
+          # CHANGELOG.md 파일 업데이트
+          TODAY=$(date +%Y-%m-%d)
+          # 첫 번째 릴리즈 태그 라인 찾기
+          FIRST_TAG_LINE=$(grep -n "^### \[" CHANGELOG.md | head -1 | cut -d':' -f1)
+          if [[ -n "$FIRST_TAG_LINE" ]]; then
+            # 현재 릴리즈 태그 정보 추출
+            CURRENT_TAG_LINE=$(sed -n "${FIRST_TAG_LINE}p" CHANGELOG.md)
+            
+            # 현재 버전 추출
+            CURRENT_VERSION=$(echo "$CURRENT_TAG_LINE" | grep -o '\[.*\]' | sed 's/\[\(.*\)\]/\1/')
+            echo "현재 버전: $CURRENT_VERSION"
+            
+            # 이전 버전 추출 (compare 부분에서)
+            PREVIOUS_VERSION=$(echo "$CURRENT_TAG_LINE" | grep -o 'compare/v[^\.]*\.[^\.]*\.[^\.]*' | sed 's/compare\/v//')
+            echo "이전 버전: $PREVIOUS_VERSION"
+            
+            # 새로운 릴리즈 태그 라인 생성
+            NEW_TAG_LINE="### [${UPDATE_VERSION}](https://github.com/ummgoban/shared/compare/v${PREVIOUS_VERSION}...v${UPDATE_VERSION}) (${TODAY})"
+            echo "새 태그 라인: $NEW_TAG_LINE"
+            
+            # 첫 번째 릴리즈 태그 라인 교체
+            sed -i.bak "${FIRST_TAG_LINE}s|.*|${NEW_TAG_LINE}|" CHANGELOG.md
+            rm -f CHANGELOG.md.bak
+            echo "CHANGELOG.md 파일이 업데이트되었습니다."
 
+            # package.json 버전 업데이트
+            sed -i.bak "s/\(\"version\":\) \".*\"/\1 \"${UPDATE_VERSION}\"/" package.json
+            rm -f package.json.bak
+            echo "package.json 파일이 업데이트되었습니다."
+          else
+            echo "CHANGELOG.md 파일에서 릴리즈 태그를 찾을 수 없습니다."
+          fi
+
+          git add CHANGELOG.md package.json
+          git commit -m "docs: update CHANGELOG.md and package.json for v${UPDATE_VERSION}"
+          
           git push origin auto-changelog-update
 
           # pull request 이름 변경
@@ -275,6 +295,6 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            @${{ github.event.comment.user.login }} 버전 업데이트가 완료되었습니다! ✅
+            @${{ github.event.comment.user.login }} 버전 업데이트가 완료되었습니다! 
 
             버전: ${{ steps.extract-version.outputs.VERSION }}

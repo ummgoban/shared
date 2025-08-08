@@ -35,6 +35,17 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "Extracted version: $VERSION"
 
+      - name: Create and push tag
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          TAG_NAME="v${{ steps.extract-version.outputs.VERSION }}"
+          echo "Creating tag: $TAG_NAME"
+
+          git tag -a $TAG_NAME -m "Release $TAG_NAME"
+          git push origin $TAG_NAME
+
       - name: Read CHANGELOG
         id: changelog
         run: |
@@ -134,7 +145,11 @@ jobs:
       - name: Publish
         if: env.all_pass == 'true'
         run: |
+          # create .env
+          echo "NPM_TOKEN=${{ secrets.NPM_TOKEN }}" > .env
           # publish
-          yarn npm publish --access=public --no-git-checks
+          sh .script/publish.sh
+          # remove .env
+          rm .env
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

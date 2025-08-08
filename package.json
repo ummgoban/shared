@@ -1,6 +1,6 @@
 {
   "name": "@ummgoban/shared",
-  "version": "0.0.6-nightly.20250808.d768784",
+  "version": "0.0.6-nightly.20250808.db00589",
   "description": "ummgoban 공통 패키지",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

@@ -211,6 +211,9 @@ jobs:
           # 최근 커밋 revert 하기
           git revert HEAD --no-commit
 
+          # discard changes
+          git reset --hard
+
           # nightly 버전 업데이트
           if [[ "$UPDATE_VERSION" == "nightly" ]]; then
             # 이전 버전 [x].[y].[z] 추출

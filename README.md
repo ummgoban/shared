@@ -1,5 +1,8 @@
 # shared
 
+[![Release & Publish](https://github.com/ummgoban/shared/actions/workflows/create-release.yml/badge.svg)](https://github.com/ummgoban/shared/actions/workflows/create-release.yml)
+[![Check](https://github.com/ummgoban/shared/actions/workflows/check.yml/badge.svg)](https://github.com/ummgoban/shared/actions/workflows/check.yml)
+
 ummgoban 공통 패키지입니다.
 
 - ummgoban 도메인에서 공용으로 사용하는 type, utils, http client, hook 등을 관리합니다.

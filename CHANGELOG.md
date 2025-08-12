@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6-nightly.20250812.4b293fc](https://github.com/ummgoban/shared/compare/v0.0.6-nightly.20250808.a3cf0f6...0.0.6-nightly.20250812.4b293fc) (2025-08-12)
+
+
+### ✨ 새로운 기능
+
+* **type:** 영업시간 종료시간이 같으면 24시간 영업 ([#52](https://github.com/ummgoban/shared/issues/52)) ([6570ac0](https://github.com/ummgoban/shared/commit/6570ac088e4358aa4293204b8b3b90888b845c22))
+
 ### [0.0.6-nightly.20250808.a3cf0f6](https://github.com/ummgoban/shared/compare/v0.0.6-nightly.20250808.2fb39ff...0.0.6-nightly.20250808.a3cf0f6) (2025-08-08)
 
 

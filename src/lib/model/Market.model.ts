@@ -42,7 +42,7 @@ export class Market {
 
     if (nowHour === openTimeHour && nowMinute < openTimeMinute) return false;
 
-    if (nowHour === closeTimeHour && nowMinute > closeTimeMinute) return false;
+    if (nowHour === closeTimeHour && nowMinute >= closeTimeMinute) return false;
 
     return true;
   }

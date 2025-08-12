@@ -36,6 +36,8 @@ export class Market {
     const [openTimeHour, openTimeMinute] = openTime.split(':').map(Number);
     const [closeTimeHour, closeTimeMinute] = closeTime.split(':').map(Number);
 
+    if (openTimeHour === closeTimeHour && openTimeMinute === closeTimeMinute) return true;
+
     if (nowHour < openTimeHour || nowHour > closeTimeHour) return false;
 
     if (nowHour === openTimeHour && nowMinute < openTimeMinute) return false;
